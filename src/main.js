@@ -1,7 +1,7 @@
 import { randomPair, landingEffect } from './colors.js';
 import { createCapsule, paintCapsule } from './capsule.js';
-import { animateToss } from './animation.js';
-import { AudioManager } from './audio.js';
+import { animateToss } from './animation.js?v=120rpm-3';
+import { AudioManager } from './audio.js?v=120rpm-3';
 import { celebrate } from './particles.js';
 const holder = document.querySelector('#capsule');
 const button = document.querySelector('#toss');
