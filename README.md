@@ -18,8 +18,8 @@ Open http://127.0.0.1:4173. Rebuild after source changes and refresh. No package
 
 - `src/colors.js`: integer rolls 0–32 red, 33–65 blue, 66–98 yellow, 99 green; independent draws per half. Bottom RGB channels are multiplied by 0.95 and rounded.
 - `src/capsule.js`: flat SVG matching the supplied capsule silhouette, with separately colored halves and a persistent black outline/divider.
-- `src/animation.js`: time-based requestAnimationFrame timeline: 360° over 0.5 seconds, 1080° over 3 seconds, 360° over 0.5 seconds. Woosh cues follow timeline crossings at 1.5, 2.5 and 3.5 seconds. Rendering and audio dispatch occur on the first browser frame at/after each deadline; background-tab throttling can delay presentation, but cannot change the landing or accumulated rotation.
-- `src/audio.js`: optional preloaded/decoded Web Audio buffers; each cue creates its own overlapping source. Browser audio is unlocked by Toss. Missing/unavailable files remain silent. An immediate click before decoding completes can be silent.
+- `src/animation.js`: time-based requestAnimationFrame timeline: 360° over 0.5 seconds, 1080° over 1.5 seconds at 120 RPM, 360° over 0.5 seconds, for five turns in 2.5 seconds. The eased end turns briefly exceed 120 RPM to fit one full turn each, joining the middle phase smoothly. Woosh cues follow timeline crossings at 1.0, 1.5 and 2.0 seconds. Rendering and audio dispatch occur on the first browser frame at/after each deadline; background-tab throttling can delay presentation, but cannot change the landing or accumulated rotation.
+- `src/audio.js`: optional preloaded/decoded Web Audio buffers; each cue creates its own overlapping source. Browser audio is unlocked by Toss. Missing/unavailable files remain silent. Toss waits for preload and audio unlock before starting its synchronized timeline. Both built audio/ and source-hosted public/audio/ paths are supported.
 - `src/particles.js`: 10 steady falling capsules for one green; 100 staggered varied ballistic/curved capsules for double green. All use the same weighted colors and darker bottoms, cannot intercept clicks, and are removed after exiting below the viewport or the lifetime limit.
 - `src/main.js`: locks overlapping tosses, chooses the landing before animation, cycles colors every 125 ms, and applies one landing effect. Temporary green colors never celebrate.
 
@@ -27,7 +27,7 @@ Open http://127.0.0.1:4173. Rebuild after source changes and refresh. No package
 
 The supplied reference is included at `public/assets/megavitamin-template.png`. Replace it there if needed; it is a reference, not the rendered graphic. Change SVG geometry in `src/capsule.js` to alter the actual capsule.
 
-Audio was not supplied. Upload these exact filenames into `public/audio/`:
+The repository includes throw.mp3 (accepted as an alias for thrown.mp3), woosh.mp3 and hit.mp3. The two Green sounds are still optional missing assets. Upload sounds into `public/audio/`:
 
 | File | Cue |
 | --- | --- |
@@ -51,25 +51,9 @@ megaTossDebug.forceNext('normal')
 
 There is no visible debug interface and the hook is not enabled on GitHub Pages. Automated tests cover exhaustive probability buckets, independent draws, all landing decisions, bottom tint, phase angles/speed, and cue dispatch under irregular frame timing.
 
-## Publish to GitHub Pages
+## GitHub Pages
 
-This delivery is local: the connected GitHub tool does not support creating repositories, and GitHub CLI was unavailable. Install GitHub CLI and authenticate, then run from this project directory:
+Repository: https://github.com/darrinjmajocha/mega
+Game: https://darrinjmajocha.github.io/mega/
 
-```sh
-gh auth login
-git init -b main
-git add .
-git commit -m "Build Mega Toss simulator"
-gh repo create mega-toss --public --source=. --remote=origin
-gh api --method POST repos/darrinjmajocha/mega-toss/pages -f build_type=workflow
-git push -u origin main
-```
-
-If Pages API setup is unavailable, select **Settings → Pages → Source → GitHub Actions** in the repository, then rerun the workflow. If the repository name already exists, inspect it before choosing a different name or connecting a remote; do not overwrite an existing project.
-
-`.github/workflows/pages.yml` tests, builds and publishes on main pushes and manual runs. All app/asset paths are relative so `/mega-toss/` hosting works. Deployment needs Pages and Actions permissions. After a successful workflow, the expected URLs are:
-
-- Repository: https://github.com/darrinjmajocha/mega-toss
-- Game: https://darrinjmajocha.github.io/mega-toss/
-
-These are intended destinations, not verified live links. Actual MP3 playback and live Pages deployment require the missing assets and publishing setup.
+The included workflow tests, builds and deploys main pushes when Pages uses GitHub Actions. Source-branch Pages hosting also works: audio loading supports both public/audio/ in the source and audio/ in the build output. Keep uploaded MP3 files in public/audio/. No package installation is needed.

@@ -27,17 +27,17 @@ test('each bottom RGB channel is rounded to 95% of base', () => {
   }
 });
 test('phase boundaries and constant phase speed are exact', () => {
-  for (const [time, angle] of [[0,0],[500,360],[1500,720],[2500,1080],[3500,1440],[4000,1800]]) assert.equal(angleAt(time), angle);
-  for (let t = 500; t < 3500; t += 100) assert.ok(Math.abs(angleAt(t + 100) - angleAt(t) - 36) < 1e-9);
+  for (const [time, angle] of [[0,0],[500,360],[1000,720],[1500,1080],[2000,1440],[2500,1800]]) assert.equal(angleAt(time), angle);
+  for (let t = 500; t < 2000; t += 100) assert.ok(Math.abs(angleAt(t + 100) - angleAt(t) - 72) < 1e-9);
 });
 test('irregular frames cross cues once, finish once, and stop cycling', () => {
   let callback, cycles = 0, lands = 0;
   const cues = [], angles = [];
   animateToss({ now: () => 0, request: cb => { callback = cb; }, frame: a => angles.push(a), cycle: () => cycles++, woosh: i => cues.push(i), land: () => lands++ });
-  for (const time of [100, 500, 1499, 1508, 2600, 3501]) callback(time);
+  for (const time of [100, 500, 999, 1008, 1600, 2001]) callback(time);
   assert.equal(lands, 0);
   const before = cycles;
-  callback(4000);
+  callback(2500);
   assert.equal(lands, 1);
   assert.equal(cycles, before);
   assert.deepEqual(cues, [0,1,2]);

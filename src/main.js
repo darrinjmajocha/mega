@@ -17,12 +17,12 @@ if (['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
     forcedPair = kind === 'double' ? ['green', 'green'] : kind === 'single' ? ['green', 'blue'] : ['red', 'yellow'];
   } };
 }
-button.addEventListener('click', () => {
+button.addEventListener('click', async () => {
   if (button.disabled) return;
   button.disabled = true;
   const finalPair = forcedPair || randomPair();
   forcedPair = null;
-  audio.unlock();
+  await audio.unlock();
   audio.play('thrown');
   animateToss({
     frame: angle => { holder.style.transform = `rotate(${angle}deg)`; },
