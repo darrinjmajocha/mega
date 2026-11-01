@@ -1,5 +1,5 @@
-import { randomPair } from './colors.js';
-import { createCapsule, paintCapsule } from './capsule.js';
+import { randomPair } from './colors.js?v=seamless-5';
+import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
 export function celebrate(container, count) {
   if (!count) return;
   const dramatic = count === 100;

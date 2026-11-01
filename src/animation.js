@@ -1,8 +1,8 @@
 export const DURATION = 1750;
 export const WOOSH_TIMES = [750, 1000, 1250];
-// Preserve the existing half-second easing for spins 1 and 5.
+// Half-second ramps: 0 -> 240 RPM and 240 -> 0 RPM, one turn each.
 // Spins 2-4 each take 250ms (240 RPM).
-const accelerate = t => 2 * t * t - t * t * t;
+const accelerate = t => t * t;
 export function angleAt(ms) {
   if (ms <= 0) return 0;
   if (ms < 500) return 360 * accelerate(ms / 500);

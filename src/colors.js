@@ -6,7 +6,7 @@ export function colorFromRoll(roll) {
 export function randomColor(random = Math.random) { return colorFromRoll(Math.floor(random() * 100)); }
 export function randomPair(random = Math.random) { return [randomColor(random), randomColor(random)]; }
 export function darken(hex) {
-  return '#' + hex.slice(1).match(/../g).map(channel => Math.round(parseInt(channel, 16) * .95).toString(16).padStart(2, '0')).join('');
+  return '#' + hex.slice(1).match(/../g).map(channel => Math.round(parseInt(channel, 16) * .90).toString(16).padStart(2, '0')).join('');
 }
 export function landingEffect(pair) {
   const greens = pair.filter(color => color === 'green').length;

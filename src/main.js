@@ -1,8 +1,8 @@
-import { randomPair, spinningPair, landingEffect } from './colors.js?v=240rpm-4';
-import { createCapsule, paintCapsule } from './capsule.js';
-import { animateToss } from './animation.js?v=240rpm-4';
+import { randomPair, spinningPair, landingEffect } from './colors.js?v=seamless-5';
+import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
+import { animateToss } from './animation.js?v=seamless-5';
 import { AudioManager } from './audio.js?v=120rpm-3';
-import { celebrate } from './particles.js';
+import { celebrate } from './particles.js?v=seamless-5';
 const holder = document.querySelector('#capsule');
 const button = document.querySelector('#toss');
 const svg = createCapsule();

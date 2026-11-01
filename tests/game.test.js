@@ -20,10 +20,10 @@ test('all 16 landing pairs select exactly one sound and correct particle count',
     assert.deepEqual(landingEffect([a, b]), { sound: ['hit', 'hit_g', 'hit_gg'][green], count: [0, 10, 100][green] });
   }
 });
-test('each bottom RGB channel is rounded to 95% of base', () => {
+test('each bottom RGB channel is rounded to 90% of base', () => {
   for (const hex of Object.values(COLORS)) {
     const result = darken(hex);
-    for (const i of [1, 3, 5]) assert.equal(parseInt(result.slice(i, i + 2), 16), Math.round(parseInt(hex.slice(i, i + 2), 16) * .95));
+    for (const i of [1, 3, 5]) assert.equal(parseInt(result.slice(i, i + 2), 16), Math.round(parseInt(hex.slice(i, i + 2), 16) * .90));
   }
 });
 test('phase boundaries and constant phase speed are exact', () => {
@@ -49,4 +49,18 @@ test('spin colors exclude green without changing final green odds', () => {
   let n = 0;
   assert.deepEqual(spinningPair(() => [0, .99][n++]), ['red', 'yellow']);
   assert.deepEqual(randomPair(() => .99), ['green', 'green']);
+});
+
+test('end ramps meet the 240 RPM middle phase with continuous velocity', () => {
+  const h = 0.001;
+  const before = t => (angleAt(t) - angleAt(t - h)) / h;
+  const after = t => (angleAt(t + h) - angleAt(t)) / h;
+  for (const t of [500, 1250]) {
+    assert.ok(Math.abs(before(t) - 1.44) < 0.00001);
+    assert.ok(Math.abs(after(t) - 1.44) < 0.00001);
+  }
+  assert.ok(after(0) < 0.00001);
+  assert.ok(before(1750) < 0.00001);
+  assert.equal(angleAt(250), 90);
+  assert.equal(angleAt(1500), 1710);
 });
