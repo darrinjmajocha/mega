@@ -1,6 +1,6 @@
 import { randomPair, spinningPair, landingEffect } from './colors.js?v=seamless-5';
 import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
-import { animateToss } from './animation.js?v=seamless-5';
+import { animateToss } from './animation.js?v=early-woosh-6';
 import { AudioManager } from './audio.js?v=120rpm-3';
 import { celebrate } from './particles.js?v=seamless-5';
 const holder = document.querySelector('#capsule');

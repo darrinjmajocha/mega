@@ -1,5 +1,5 @@
 export const DURATION = 1750;
-export const WOOSH_TIMES = [750, 1000, 1250];
+export const WOOSH_TIMES = [500, 750, 1000];
 // Half-second ramps: 0 -> 240 RPM and 240 -> 0 RPM, one turn each.
 // Spins 2-4 each take 250ms (240 RPM).
 const accelerate = t => t * t;
