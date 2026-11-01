@@ -18,10 +18,10 @@ Open http://127.0.0.1:4173. Rebuild after source changes and refresh. No package
 
 - `src/colors.js`: integer rolls 0–32 red, 33–65 blue, 66–98 yellow, 99 green; independent draws per half. Bottom RGB channels are multiplied by 0.95 and rounded.
 - `src/capsule.js`: flat SVG matching the supplied capsule silhouette, with separately colored halves and a persistent black outline/divider.
-- `src/animation.js`: time-based requestAnimationFrame timeline: 360° over 0.5 seconds, 1080° over 1.5 seconds at 120 RPM, 360° over 0.5 seconds, for five turns in 2.5 seconds. The eased end turns briefly exceed 120 RPM to fit one full turn each, joining the middle phase smoothly. Woosh cues follow timeline crossings at 1.0, 1.5 and 2.0 seconds. Rendering and audio dispatch occur on the first browser frame at/after each deadline; background-tab throttling can delay presentation, but cannot change the landing or accumulated rotation.
+- `src/animation.js`: time-based requestAnimationFrame timeline: 360° over 0.5 seconds, 1080° over 0.75 seconds at 240 RPM, 360° over 0.5 seconds, for five turns in 1.75 seconds. The first and last turns retain their existing half-second easing. Woosh cues follow timeline crossings at 0.75, 1.0 and 1.25 seconds. Rendering and audio dispatch occur on the first browser frame at/after each deadline; background-tab throttling can delay presentation, but cannot change the landing or accumulated rotation.
 - `src/audio.js`: optional preloaded/decoded Web Audio buffers; each cue creates its own overlapping source. Browser audio is unlocked by Toss. Missing/unavailable files remain silent. Toss waits for preload and audio unlock before starting its synchronized timeline. Both built audio/ and source-hosted public/audio/ paths are supported.
 - `src/particles.js`: 10 steady falling capsules for one green; 100 staggered varied ballistic/curved capsules for double green. All use the same weighted colors and darker bottoms, cannot intercept clicks, and are removed after exiting below the viewport or the lifetime limit.
-- `src/main.js`: locks overlapping tosses, chooses the landing before animation, cycles colors every 125 ms, and applies one landing effect. Temporary green colors never celebrate.
+- `src/main.js`: locks overlapping tosses, chooses the landing before animation, cycles red, blue and yellow (no green) every 125 ms, and applies one landing effect. Temporary green colors never celebrate.
 
 ## Supplied assets
 

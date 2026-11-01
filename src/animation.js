@@ -1,13 +1,13 @@
-export const DURATION = 2500;
-export const WOOSH_TIMES = [1000, 1500, 2000];
-// One turn in 0.5s from rest requires a brief overspeed. This cubic
-// joins the 120 RPM middle phase without a velocity discontinuity.
+export const DURATION = 1750;
+export const WOOSH_TIMES = [750, 1000, 1250];
+// Preserve the existing half-second easing for spins 1 and 5.
+// Spins 2-4 each take 250ms (240 RPM).
 const accelerate = t => 2 * t * t - t * t * t;
 export function angleAt(ms) {
   if (ms <= 0) return 0;
   if (ms < 500) return 360 * accelerate(ms / 500);
-  if (ms < 2000) return 360 + (ms - 500) * .72;
-  if (ms < DURATION) return 1440 + 360 * (1 - accelerate(1 - (ms - 2000) / 500));
+  if (ms < 1250) return 360 + (ms - 500) * 1.44;
+  if (ms < DURATION) return 1440 + 360 * (1 - accelerate(1 - (ms - 1250) / 500));
   return 1800;
 }
 export function animateToss({ frame, cycle, woosh, land, now = performance.now.bind(performance), request = requestAnimationFrame }) {

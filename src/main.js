@@ -1,6 +1,6 @@
-import { randomPair, landingEffect } from './colors.js';
+import { randomPair, spinningPair, landingEffect } from './colors.js?v=240rpm-4';
 import { createCapsule, paintCapsule } from './capsule.js';
-import { animateToss } from './animation.js?v=120rpm-3';
+import { animateToss } from './animation.js?v=240rpm-4';
 import { AudioManager } from './audio.js?v=120rpm-3';
 import { celebrate } from './particles.js';
 const holder = document.querySelector('#capsule');
@@ -26,7 +26,7 @@ button.addEventListener('click', async () => {
   audio.play('thrown');
   animateToss({
     frame: angle => { holder.style.transform = `rotate(${angle}deg)`; },
-    cycle: () => paintCapsule(svg, randomPair()),
+    cycle: () => paintCapsule(svg, spinningPair()),
     woosh: () => audio.play('woosh'),
     land: () => {
       holder.style.transform = 'rotate(0deg)';

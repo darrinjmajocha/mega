@@ -12,3 +12,9 @@ export function landingEffect(pair) {
   const greens = pair.filter(color => color === 'green').length;
   return { sound: ['hit', 'hit_g', 'hit_gg'][greens], count: [0, 10, 100][greens] };
 }
+
+// Visual cycling excludes green; landing and celebration rolls stay weighted.
+export function spinningPair(random = Math.random) {
+  const colors = ['red', 'blue', 'yellow'];
+  return [colors[Math.floor(random() * 3)], colors[Math.floor(random() * 3)]];
+}

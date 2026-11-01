@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { colorFromRoll, randomPair, landingEffect, darken, COLORS } from '../src/colors.js';
+import { colorFromRoll, spinningPair, randomPair, landingEffect, darken, COLORS } from '../src/colors.js';
 import { angleAt, animateToss } from '../src/animation.js';
 test('exactly 33/33/33/1 outcomes across all integer rolls', () => {
   const counts = { red: 0, blue: 0, yellow: 0, green: 0 };
@@ -27,19 +27,26 @@ test('each bottom RGB channel is rounded to 95% of base', () => {
   }
 });
 test('phase boundaries and constant phase speed are exact', () => {
-  for (const [time, angle] of [[0,0],[500,360],[1000,720],[1500,1080],[2000,1440],[2500,1800]]) assert.equal(angleAt(time), angle);
-  for (let t = 500; t < 2000; t += 100) assert.ok(Math.abs(angleAt(t + 100) - angleAt(t) - 72) < 1e-9);
+  for (const [time, angle] of [[0,0],[500,360],[750,720],[1000,1080],[1250,1440],[1750,1800]]) assert.equal(angleAt(time), angle);
+  for (let t = 500; t < 1250; t += 50) assert.ok(Math.abs(angleAt(t + 50) - angleAt(t) - 72) < 1e-9);
 });
 test('irregular frames cross cues once, finish once, and stop cycling', () => {
   let callback, cycles = 0, lands = 0;
   const cues = [], angles = [];
   animateToss({ now: () => 0, request: cb => { callback = cb; }, frame: a => angles.push(a), cycle: () => cycles++, woosh: i => cues.push(i), land: () => lands++ });
-  for (const time of [100, 500, 999, 1008, 1600, 2001]) callback(time);
+  for (const time of [100, 500, 749, 758, 1100, 1251]) callback(time);
   assert.equal(lands, 0);
   const before = cycles;
-  callback(2500);
+  callback(1750);
   assert.equal(lands, 1);
   assert.equal(cycles, before);
   assert.deepEqual(cues, [0,1,2]);
   assert.equal(angles.at(-1), 1800);
+});
+
+test('spin colors exclude green without changing final green odds', () => {
+  for (let n = 0; n < 1000; n++) assert.ok(spinningPair(() => n / 1000).every(c => ['red', 'blue', 'yellow'].includes(c)));
+  let n = 0;
+  assert.deepEqual(spinningPair(() => [0, .99][n++]), ['red', 'yellow']);
+  assert.deepEqual(randomPair(() => .99), ['green', 'green']);
 });
