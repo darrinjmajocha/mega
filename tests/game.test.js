@@ -65,13 +65,13 @@ test('end ramps meet the 240 RPM middle phase with continuous velocity', () => {
   assert.equal(angleAt(1500), 1710);
 });
 
-test('woosh plays once at the start of spins 2, 3 and 4', () => {
+test('woosh plays once halfway through spins 2, 3 and 4', () => {
   let tick, elapsed = 0;
   const cues = [];
   animateToss({now: () => 0, request: cb => { tick = cb; },
     frame() {}, cycle() {}, land() {}, woosh: () => cues.push(elapsed)});
-  for (const t of [499, 500, 501, 749, 750, 751, 999, 1000, 1001, 1250, 1750]) {
+  for (const t of [500, 624, 625, 626, 750, 874, 875, 876, 1000, 1124, 1125, 1126, 1250, 1750]) {
     elapsed = t; tick(t);
   }
-  assert.deepEqual(cues, [500, 750, 1000]);
+  assert.deepEqual(cues, [625, 875, 1125]);
 });
