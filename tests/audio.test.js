@@ -13,6 +13,7 @@ test('source-hosted throw alias loads, resume is awaited, and cues overlap', asy
   let finishResume;
   class Context {
     state = 'suspended';
+    createGain() { return { gain: { value: 1 }, connect() {} }; }
     async decodeAudioData(data) { return data; }
     resume() { return new Promise(resolve => { finishResume = () => { this.state = 'running'; resolve(); }; }); }
     createBufferSource() { return { connect() {}, disconnect() {}, start() { played.push(this.buffer); } }; }
@@ -23,6 +24,7 @@ test('source-hosted throw alias loads, resume is awaited, and cues overlap', asy
     const audio = new AudioManager();
     await audio.ready;
     assert.equal(audio.buffers.size, 3);
+    for (const volume of [1, .5, 0, 1]) { audio.setVolume(volume); assert.equal(audio.output.gain.value, volume); }
     let unlocked = false;
     const unlocking = audio.unlock().then(() => { unlocked = true; });
     await Promise.resolve();
@@ -37,3 +39,4 @@ test('source-hosted throw alias loads, resume is awaited, and cues overlap', asy
     globalThis.fetch = oldFetch;
   }
 });
+

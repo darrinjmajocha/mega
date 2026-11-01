@@ -23,6 +23,17 @@ Open http://127.0.0.1:4173. Rebuild after source changes and refresh. No package
 - `src/particles.js`: 10 steady falling capsules for one green; 100 staggered varied ballistic/curved capsules for double green. All use the same weighted colors and darker bottoms, cannot intercept clicks, and are removed after exiting below the viewport or the lifetime limit.
 - `src/main.js`: locks overlapping tosses, chooses the landing before animation, cycles red, blue and yellow (no green) every 125 ms, and applies one landing effect. Temporary green colors never celebrate.
 
+## Settings and modes
+
+Settings are session-local and start at full volume with normal mode. All four buttons are disabled from Toss activation through preload, animation, fake-outs, and final landing.
+
+- **Volume:** red/red = full, empty/red = 50% gain, empty/empty = muted; the next click restores full. A shared Web Audio GainNode affects all overlapping sounds.
+- **Suspense Mode:** blue/blue = off; purple/orange = on. Each toss chooses a peak of 60–300 RPM, a 0.35–0.8 second acceleration, a 2.4–4.8 second deceleration, and a bounded whole number of turns. Most finish normally; 20% pause and change colors, and 20% pause and perform one extra rapid turn. Fake-outs only cycle non-green display colors; they never change the predetermined final pair or play a premature landing sound.
+- **Reduced Motion Mode:** activating it turns both its yellow icon and the main capsule horizontal. Toss fades only the two color fills out over 0.5 seconds, pauses for one second, then fades the predetermined colors in together over 0.5 seconds. The outline stays visible, there is no spin or woosh, and the normal throw and appropriate landing sound remain. Existing green celebrations and odds are preserved.
+- The two modes cannot be active together. Attempting to switch without disabling the current mode jitters its icon for one second and displays a temporary centered message.
+
+The normal animation in `src/animation.js`, weighted final-color logic, particle effects, and halfway woosh cues are unchanged. New behavior lives in `src/settings.js` and `src/modes.js`. Tests cover volume, busy guards, both conflict directions, fade phases, randomized speed/turn bounds, all fake-out types, and final-only landing callbacks.
+
 ## Supplied assets
 
 The supplied reference is included at `public/assets/megavitamin-template.png`. Replace it there if needed; it is a reference, not the rendered graphic. Change SVG geometry in `src/capsule.js` to alter the actual capsule.
@@ -57,3 +68,4 @@ Repository: https://github.com/darrinjmajocha/mega
 Game: https://darrinjmajocha.github.io/mega/
 
 The included workflow tests, builds and deploys main pushes when Pages uses GitHub Actions. Source-branch Pages hosting also works: audio loading supports both public/audio/ in the source and audio/ in the build output. Keep uploaded MP3 files in public/audio/. No package installation is needed.
+

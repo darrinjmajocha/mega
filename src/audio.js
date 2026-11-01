@@ -7,6 +7,8 @@ export class AudioManager {
   constructor() {
     this.context = null;
     this.buffers = new Map();
+    this.volume = 1;
+    this.output = null;
     this.ready = this.load();
   }
   async load() {
@@ -14,6 +16,9 @@ export class AudioManager {
       const Context = window.AudioContext || window.webkitAudioContext;
       if (!Context) return;
       this.context = new Context();
+      this.output = this.context.createGain();
+      this.output.gain.value = this.volume;
+      this.output.connect(this.context.destination);
       await Promise.all(names.map(async name => {
         for (const url of audioCandidates(name)) {
           try {
@@ -33,13 +38,18 @@ export class AudioManager {
       await Promise.all([this.ready, resumed]);
     } catch { /* Gameplay still works when browser audio is unavailable. */ }
   }
+  setVolume(value) {
+    this.volume = Math.max(0, Math.min(1, value));
+    if (this.output) this.output.gain.value = this.volume;
+  }
   play(name) {
     const buffer = this.buffers.get(name);
     if (!this.context || !buffer) return;
     const source = this.context.createBufferSource();
     source.buffer = buffer;
-    source.connect(this.context.destination);
+    source.connect(this.output);
     source.onended = () => source.disconnect();
     source.start();
   }
 }
+

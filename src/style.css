@@ -1,4 +1,4 @@
-:root { font-family: Arial, Helvetica, sans-serif; color: #151515; background: #f5f3ed; }
+:root { font-family: Arial, Helvetica, sans-serif; color: #151515; --page-background: #f5f3ed; background: var(--page-background); }
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 240px; }
 main { position: relative; z-index: 2; min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(20px, 4vh, 40px); padding: 24px 16px; }
@@ -13,3 +13,20 @@ button:focus-visible { outline: 3px solid #245eea; outline-offset: 6px; }
 button:disabled { cursor: default; opacity: .45; }
 #particles { position: fixed; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; }
 .particle { position: absolute; top: 0; left: 0; will-change: transform; }
+
+.settings { position: absolute; z-index: 3; top: 20px; left: 20px; display: grid; gap: 6px; }
+.setting { display: flex; align-items: center; gap: 12px; min-height: 54px; padding: 6px 12px; border: 0; border-radius: 12px; background: transparent; color: #151515; font-size: 15px; font-weight: 700; text-align: left; }
+.setting:hover:enabled { background: #eae7df; }
+.setting-icon { width: 40px; height: 44px; display: grid; place-items: center; flex-shrink: 0; }
+.setting-icon svg { width: 20px; }
+#mode-notice { position: fixed; z-index: 5; top: 50%; left: 50%; transform: translate(-50%, -50%); width: max-content; max-width: calc(100vw - 40px); padding: 18px 22px; border: 2px solid #151515; border-radius: 14px; background: var(--page-background); font-size: 17px; font-weight: 700; text-align: center; pointer-events: none; }
+.jitter { animation: jitter 1s ease-in-out; }
+@keyframes jitter { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); } 20%, 40%, 60%, 80% { transform: translateX(3px); } }
+@media (max-width: 800px), (max-height: 650px) {
+  .settings { position: relative; top: auto; left: auto; margin: 12px 12px 0; width: fit-content; gap: 0; }
+  .setting { min-height: 46px; padding: 2px 10px; font-size: 14px; }
+  .setting-icon { height: 42px; }
+  main { min-height: calc(100svh - 150px); padding-top: 16px; gap: 20px; }
+  .stage { width: min(82vw, 40svh, 380px); }
+}
+
