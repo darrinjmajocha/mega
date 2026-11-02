@@ -3,9 +3,9 @@ import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 import { AudioManager } from './audio.js?v=settings-9';
 import { celebrate } from './particles.js?v=seamless-5';
-import { animateExtendedSuspense } from './suspense-extras.js?v=pauses-10';
+import { animateExtendedSuspense } from './suspense-extras.js?v=suspense-11';
 import { Settings, MODE_LABELS } from './settings.js?v=settings-9';
-import { animateReduced, animateSuspense } from './modes.js?v=pauses-10';
+import { animateReduced, animateSuspense } from './modes.js?v=suspense-11';
 
 const holder = document.querySelector('#capsule');
 const button = document.querySelector('#toss');

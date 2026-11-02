@@ -20,7 +20,7 @@ export function animateReduced({ fade, reveal, land, now = performance.now.bind(
   tick(start);
 }
 export function createSuspensePlan(random = Math.random) {
-  const rpm = 60 + random() * 240;
+  const rpm = 60 + random() * 540;
   const velocity = rpm * 360 / 60000; // degrees per millisecond
   const acceleration = 350 + random() * 450;
   const deceleration = 2400 + random() * 2400;

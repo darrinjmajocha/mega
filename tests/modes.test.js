@@ -18,7 +18,7 @@ test('suspense plans have bounded speeds, whole turns, long deceleration and syn
   for (let n = 0; n < 300; n++) {
     const p = createSuspensePlan(random);
     variants.add(p.fake);
-    assert.ok(p.rpm >= 60 && p.rpm <= 300);
+    assert.ok(p.rpm >= 60 && p.rpm <= 600);
     assert.ok(p.cruise > 0 && p.deceleration > p.acceleration * 2);
     assert.ok(p.duration > 3000 && p.duration < 18000);
     assert.equal(suspenseAngleAt(p, p.stop), p.turns * 360);
