@@ -12,8 +12,6 @@ npm run build
 npm run dev
 ```
 
-Open http://127.0.0.1:4173. Rebuild after source changes and refresh. No package installation is needed.
-
 ## Behavior and organization
 
 - `src/colors.js`: integer rolls 0–32 red, 33–65 blue, 66–98 yellow, 99 green; independent draws per half. Bottom RGB channels are multiplied by 0.90 and rounded.
