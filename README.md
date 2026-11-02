@@ -89,3 +89,9 @@ Non-pause-only suspense plans have a 3% chance of ending abruptly during cruisin
 The independent red/green setting adds centered R, B, Y, and G labels to main and celebration capsules. Its icon flips to green/red with labels when enabled. Labels scale with the SVG and rotate with the capsule, except that the main labels stay upright in Reduced Motion and fade together with their halves. The setting is locked during tosses. Green appears in cycling colors with the same 1% odds per half as landing rolls; cycling green never triggers celebrations.
 
 Selected Suspense, Reduced Motion, and Colorblind icons have a dark rounded outline on a white backing, so selection is indicated by shape and contrast as well as color. Forced-colors mode uses the system highlight outline.
+
+### Rare surprises and green shortcuts
+
+Suspense has a 3% freeze-frame chance on spins without an abrupt ending: motion and cycling freeze for 0.3–0.8 seconds, then resume on the same timeline. Dramatic Anticlimax joins the zany pool. A separate final reveal roll gives a 0.3% green tease (when a non-green final half exists) or 2% nested-capsule pop-out. The green tease holds a false green preview for 0.65 seconds before restoring the true result. The nested capsule grows to full size over 1.2 seconds and uses the predetermined final pair. Landing audio and celebrations occur only afterward.
+
+Hold Alt+G while clicking Toss to force exactly one green half, with the other randomly red, blue, or yellow. Hold Alt+G+H for double green. These work in all modes and survive fake-outs and nesting. Releasing keys, leaving the window, or hiding the tab clears held-key state. Non-shortcut tosses keep the original probabilities.

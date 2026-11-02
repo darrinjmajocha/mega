@@ -3,13 +3,13 @@ import assert from 'node:assert/strict';
 import { abruptFinishPlan } from '../src/suspense-extras.js';
 import { createSuspensePlan } from '../src/modes.js';
 import { chooseZany, EFFECTS, effectAngle } from '../src/zany.js';
-test('all six effects are reachable and settle upright',()=>{
+test('all seven effects are reachable and settle upright',()=>{
   const found=new Set();
-  for(let i=0;i<6;i++){
-    let n=0; const names=chooseZany(true,()=>n++===0?(i+.5)/6:.9);
+  for(let i=0;i<7;i++){
+    let n=0; const names=chooseZany(true,()=>n++===0?(i+.5)/7:.9);
     found.add(names[0]);assert.equal(names.length,1);
   }
-  assert.equal(found.size,6);
+  assert.equal(found.size,7);
   for(const name of found){
     const end=EFFECTS[name].at(-1)[0];
     assert.equal(effectAngle(name,0),0);

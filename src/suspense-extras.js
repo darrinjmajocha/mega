@@ -1,6 +1,6 @@
-import { animateZany } from './zany.js?v=chains-14';
+import { animateZany } from './zany.js?v=surprises-18';
 import { afterPause } from './pauses.js?v=zany-13';
-import { animateSuspense, createSuspensePlan } from './modes.js?v=zany-13';
+import { animateSuspense, createSuspensePlan } from './modes.js?v=surprises-18';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 export function betweenMovementPause(random = Math.random) {
   return (10 + Math.floor(random() * 91)) * 10;
@@ -25,6 +25,9 @@ export function abruptFinishPlan(plan, random = Math.random) {
 }
 export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan(), run = animateSuspense } = {}) {
   plan = abruptFinishPlan(plan);
+  if (plan.abruptAngle === undefined && Math.random() < .03) {
+    plan = { ...plan, freezeAt: plan.acceleration + plan.cruise * (.2 + Math.random() * .6), freezeDuration: 300 + Math.random() * 500 };
+  }
   let revealed = false;
   const waitForEncore = callback => plan.fake === 'pause' ? callback() : afterPause(callback);
   const vary = plan.abruptAngle === undefined && Math.random() < .65;

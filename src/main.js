@@ -1,11 +1,12 @@
+import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=surprises-18';
 import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
 import { createCapsule, paintCapsule } from './capsule.js?v=rain-16';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 import { AudioManager } from './audio.js?v=settings-9';
 import { celebrate } from './particles.js?v=rain-16';
-import { animateExtendedSuspense } from './suspense-extras.js?v=selected-17';
+import { animateExtendedSuspense } from './suspense-extras.js?v=surprises-18';
 import { Settings, MODE_LABELS } from './settings.js?v=colorblind-15';
-import { animateReduced, animateSuspense } from './modes.js?v=zany-13';
+import { animateReduced, animateSuspense } from './modes.js?v=surprises-18';
 
 const holder = document.querySelector('#capsule');
 const button = document.querySelector('#toss');
@@ -83,6 +84,14 @@ controls.colorblind.addEventListener('click', () => {
   if (settings.toggleColorblind()) updateSettings();
 });
 updateSettings();
+const held = new Set();
+window.addEventListener('keydown', event => {
+  held.add(event.code);
+  if (event.altKey && ['KeyG', 'KeyH'].includes(event.code)) event.preventDefault();
+});
+window.addEventListener('keyup', event => held.delete(event.code));
+window.addEventListener('blur', () => held.clear());
+document.addEventListener('visibilitychange', () => { if (document.hidden) held.clear(); });
 let forcedPair = null;
 // Development only: final outcomes can be forced without affecting production odds.
 if (['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
@@ -91,11 +100,11 @@ if (['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) {
     forcedPair = kind === 'double' ? ['green', 'green'] : kind === 'single' ? ['green', 'blue'] : ['red', 'yellow'];
   } };
 }
-button.addEventListener('click', async () => {
+button.addEventListener('click', async event => {
   if (settings.busy) return;
   lock(true);
   clearNotice();
-  const finalPair = forcedPair || randomPair();
+  const finalPair = shortcutPair({ alt: event.altKey || held.has('AltLeft') || held.has('AltRight'), g: held.has('KeyG'), h: held.has('KeyH') }) || forcedPair || randomPair();
   forcedPair = null;
   const mode = settings.mode;
   await audio.unlock();
@@ -110,6 +119,29 @@ button.addEventListener('click', async () => {
     celebrate(document.querySelector('#particles'), effect.count);
     lock(false);
   };
+  let shell = null;
+  const finale = mode === 'suspense' ? chooseFinale(finalPair) : 'none';
+  const finish = () => runFinale(finale, {
+    frame: angle => { holder.style.transform = 'rotate(' + angle + 'deg)'; },
+    tease: () => paintCapsule(svg, teasePair(finalPair)),
+    openShell: () => {
+      shell = holder.cloneNode(true);
+      shell.removeAttribute('id');
+      shell.removeAttribute('role');
+      shell.setAttribute('aria-hidden', 'true');
+      shell.className = 'matryoshka-shell';
+      holder.parentElement.append(shell);
+      paintCapsule(svg, finalPair);
+      holder.style.transform = 'scale(.15)';
+    },
+    nestFrame: p => {
+      const growth = p*p*(3-2*p);
+      holder.style.transform = 'translateY(' + (-45*Math.sin(Math.PI*p)) + 'px) scale(' + (.15+.85*growth) + ')';
+      if (shell) { shell.style.opacity = String(Math.max(0, 1-p*2.5)); shell.style.transform = 'scale(' + (1+p*.3) + ')'; }
+    },
+    closeShell: () => { shell?.remove(); shell = null; },
+    land
+  });
   const callbacks = {
     canSwap: finalPair[0] !== finalPair[1],
     swapPreview: swapped => paintCapsule(svg, swapped ? [finalPair[1], finalPair[0]] : finalPair),
@@ -119,7 +151,7 @@ button.addEventListener('click', async () => {
     woosh: () => audio.play('woosh'),
     rotationWoosh: duration => audio.play('woosh', duration),
     throwAgain: () => audio.play('thrown'),
-    land
+    land: finish
   };
   if (mode === 'reduced') {
     animateReduced({

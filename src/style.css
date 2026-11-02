@@ -49,3 +49,8 @@ button:disabled { cursor: default; opacity: .45; }
 @media (forced-colors: active) {
   .setting[aria-pressed="true"] .setting-icon { outline-color: Highlight; }
 }
+
+.stage { position: relative; }
+#capsule { position: relative; z-index: 2; }
+.matryoshka-shell { position: absolute; width: 43%; z-index: 1; pointer-events: none; }
+.colorblind .matryoshka-shell .color-letter { display: block; }

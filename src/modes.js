@@ -1,3 +1,4 @@
+import { freezeTimeline } from './surprises.js?v=surprises-18';
 import { randomPause } from './pauses.js?v=zany-13';
 // These animations are separate from the unchanged normal-mode timeline.
 const clamp = value => Math.max(0, Math.min(1, value));
@@ -62,7 +63,7 @@ export function animateSuspense({ frame, cycle, woosh, land, plan = createSuspen
   const start = now();
   let cue = 0, lastCycle = '';
   function tick(timestamp) {
-    const elapsed = Math.max(0, timestamp - start);
+    const elapsed = freezeTimeline(Math.max(0, timestamp - start), plan);
     while (cue < plan.cues.length && elapsed >= plan.cues[cue]) { woosh(); cue++; }
     frame(suspenseAngleAt(plan, elapsed));
     if (elapsed >= plan.duration) { land(); return; }
