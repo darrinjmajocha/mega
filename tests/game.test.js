@@ -44,10 +44,10 @@ test('irregular frames cross cues once, finish once, and stop cycling', () => {
   assert.equal(angles.at(-1), 1800);
 });
 
-test('spin colors exclude green without changing final green odds', () => {
-  for (let n = 0; n < 1000; n++) assert.ok(spinningPair(() => n / 1000).every(c => ['red', 'blue', 'yellow'].includes(c)));
+test('spin colors share the weighted final color distribution', () => {
+  for (let n = 0; n < 1000; n++) assert.deepEqual(spinningPair(() => n / 1000), randomPair(() => n / 1000));
   let n = 0;
-  assert.deepEqual(spinningPair(() => [0, .99][n++]), ['red', 'yellow']);
+  assert.deepEqual(spinningPair(() => [0, .99][n++]), ['red', 'green']);
   assert.deepEqual(randomPair(() => .99), ['green', 'green']);
 });
 

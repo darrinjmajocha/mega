@@ -2,6 +2,12 @@ export const VOLUMES = [0.5, 0.25, 0];
 export const MODE_LABELS = { suspense: 'Suspense Mode', reduced: 'Reduced Motion Mode' };
 export class Settings {
   mode = 'normal';
+  colorblind = false;
+  toggleColorblind() {
+    if (this.busy) return false;
+    this.colorblind = !this.colorblind;
+    return true;
+  }
   volumeIndex = 0;
   busy = false;
   get volume() { return VOLUMES[this.volumeIndex]; }

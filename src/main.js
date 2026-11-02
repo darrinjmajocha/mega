@@ -1,10 +1,10 @@
-import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=seamless-5';
-import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
+import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=colorblind-15';
+import { createCapsule, paintCapsule } from './capsule.js?v=colorblind-15';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 import { AudioManager } from './audio.js?v=settings-9';
-import { celebrate } from './particles.js?v=seamless-5';
+import { celebrate } from './particles.js?v=colorblind-15';
 import { animateExtendedSuspense } from './suspense-extras.js?v=chains-14';
-import { Settings, MODE_LABELS } from './settings.js?v=settings-9';
+import { Settings, MODE_LABELS } from './settings.js?v=colorblind-15';
 import { animateReduced, animateSuspense } from './modes.js?v=zany-13';
 
 const holder = document.querySelector('#capsule');
@@ -12,10 +12,10 @@ const button = document.querySelector('#toss');
 const svg = createCapsule();
 holder.append(svg);
 paintCapsule(svg, ['red', 'blue']);
-const halves = [svg.querySelector('[data-top]'), svg.querySelector('[data-bottom]')];
+const halves = [svg.querySelector('[data-top]'), svg.querySelector('[data-bottom]'), svg.querySelector('[data-letter-top]'), svg.querySelector('[data-letter-bottom]')];
 const audio = new AudioManager();
 const settings = new Settings();
-const controls = Object.fromEntries(['volume', 'suspense', 'reduced'].map(id => [id, document.querySelector('#' + id)]));
+const controls = Object.fromEntries(['volume', 'suspense', 'reduced', 'colorblind'].map(id => [id, document.querySelector('#' + id)]));
 const icons = Object.fromEntries(Object.entries(controls).map(([id, control]) => {
   const icon = createCapsule();
   control.querySelector('.setting-icon').append(icon);
@@ -28,6 +28,11 @@ function fillIcon(icon, top, bottom) {
   icon.querySelector('[data-bottom]').setAttribute('fill', bottom);
 }
 function updateSettings() {
+  document.body.classList.toggle('colorblind', settings.colorblind);
+  document.body.classList.toggle('reduced-motion', settings.mode === 'reduced');
+  controls.colorblind.setAttribute('aria-pressed', String(settings.colorblind));
+  icons.colorblind.classList.toggle('show-letters', settings.colorblind);
+  paintCapsule(icons.colorblind, settings.colorblind ? ['green', 'red'] : ['red', 'green']);
   const empty = 'var(--page-background)';
   fillIcon(icons.volume, settings.volumeIndex === 0 ? COLORS.red : empty,
     settings.volumeIndex === 2 ? empty : darken(COLORS.red));
@@ -74,6 +79,9 @@ for (const mode of ['suspense', 'reduced']) {
     if (result.changed) { clearNotice(); updateSettings(); }
   });
 }
+controls.colorblind.addEventListener('click', () => {
+  if (settings.toggleColorblind()) updateSettings();
+});
 updateSettings();
 let forcedPair = null;
 // Development only: final outcomes can be forced without affecting production odds.

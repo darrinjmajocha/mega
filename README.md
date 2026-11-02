@@ -21,11 +21,11 @@ Open http://127.0.0.1:4173. Rebuild after source changes and refresh. No package
 - `src/animation.js`: time-based requestAnimationFrame timeline: 360° over 0.5 seconds, 1080° over 0.75 seconds at 240 RPM, 360° over 0.5 seconds, for five turns in 1.75 seconds. The first turn accelerates uniformly from rest to 240 RPM over 0.5 seconds; the last decelerates from 240 RPM to rest over 0.5 seconds. Both join the middle phase with continuous velocity. Woosh cues follow timeline crossings at 0.625, 0.875 and 1.125 seconds (halfway through spins 2–4). Rendering and audio dispatch occur on the first browser frame at/after each deadline; background-tab throttling can delay presentation, but cannot change the landing or accumulated rotation.
 - `src/audio.js`: optional preloaded/decoded Web Audio buffers; each cue creates its own overlapping source. Browser audio is unlocked by Toss. Missing/unavailable files remain silent. Toss waits for preload and audio unlock before starting its synchronized timeline. Both built audio/ and source-hosted public/audio/ paths are supported.
 - `src/particles.js`: 10 steady falling capsules for one green; 100 staggered varied ballistic/curved capsules for double green. All use the same weighted colors and darker bottoms, cannot intercept clicks, and are removed after exiting below the viewport or the lifetime limit.
-- `src/main.js`: locks overlapping tosses, chooses the landing before animation, cycles red, blue and yellow (no green) every 125 ms, and applies one landing effect. Temporary green colors never celebrate.
+- `src/main.js`: locks overlapping tosses, chooses the landing before animation, cycles independently weighted colors (including 1% green per half) every 125 ms, and applies one landing effect. Temporary green colors never celebrate.
 
 ## Settings and modes
 
-Settings are session-local and start at 50% volume with normal mode. All four buttons are disabled from Toss activation through preload, animation, fake-outs, and final landing.
+Settings are session-local and start at 50% volume with normal mode. All five buttons are disabled from Toss activation through preload, animation, fake-outs, and final landing.
 
 - **Volume:** red/red = 50% gain, empty/red = 25% gain, empty/empty = muted; the next click restores 50%. A shared Web Audio GainNode affects all overlapping sounds.
 - **Suspense Mode:** blue/blue = off; purple/orange = on. Each toss chooses a peak of 60–600 RPM, a 0.35–0.8 second acceleration, a 2.4–4.8 second deceleration, and a bounded whole number of turns. 40% finish without an initial fake-out; 20% pause only, 20% pause and change colors, and 20% pause and perform one extra rapid turn. Fake-outs only cycle non-green display colors; they never change the predetermined final pair or play a premature landing sound.
@@ -85,3 +85,7 @@ Pause-only suspense endings (15% of initial plans) reveal the predetermined fina
 Stubborn quarter-turn, wind-up, ticking clock, false finish, sleepy spin, and indecisive colors are available as short extra finishes. Color swaps are eligible only when the predetermined halves differ; final outcomes are unchanged. Non-pause-only tosses have a 25% chance of a new effect, with an 45% chance of a second effect, then a 15% conditional chance of a third (maximum three; repeats allowed). Each effect is 0.9–1.7 seconds. Initial no-fake-out probability is now 45%; pause-only is 15%. Short pauses have slightly more weight. Existing normal and reduced modes are unchanged.
 
 Non-pause-only suspense plans have a 3% chance of ending abruptly during cruising at a whole-turn boundary. These endings remain upright, skip further fake-outs, and preserve the final color distribution.
+
+### Colorblind Mode
+
+The independent red/green setting adds centered R, B, Y, and G labels to main and celebration capsules. Its icon flips to green/red with labels when enabled. Labels scale with the SVG and rotate with the capsule, except that the main labels stay upright in Reduced Motion and fade together with their halves. The setting is locked during tosses. Green appears in cycling colors with the same 1% odds per half as landing rolls; cycling green never triggers celebrations.

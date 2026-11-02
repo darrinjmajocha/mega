@@ -27,3 +27,14 @@ test('all settings are immutable throughout an active toss', () => {
   assert.equal(s.mode, 'normal');
 });
 
+
+test('colorblind is independent of either mode and locked during tosses', () => {
+  const s = new Settings();
+  for(const mode of ['suspense','reduced']) {
+    s.toggleMode(mode);
+    assert.equal(s.toggleColorblind(), true); assert.equal(s.colorblind,true);
+    assert.equal(s.mode,mode);
+    s.busy=true; assert.equal(s.toggleColorblind(),false); assert.equal(s.colorblind,true);
+    s.busy=false; s.toggleColorblind(); s.toggleMode(mode);
+  }
+});
