@@ -38,3 +38,14 @@ button:disabled { cursor: default; opacity: .45; }
 @media (max-width: 800px), (max-height: 650px) {
   main { min-height: calc(100svh - 196px); }
 }
+
+/* A shape-based selected state, independent of the capsule's colors. */
+.setting[aria-pressed="true"] .setting-icon {
+  outline: 3px solid #151515;
+  outline-offset: 2px;
+  border-radius: 8px;
+  background: #fff;
+}
+@media (forced-colors: active) {
+  .setting[aria-pressed="true"] .setting-icon { outline-color: Highlight; }
+}

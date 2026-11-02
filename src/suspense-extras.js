@@ -10,7 +10,7 @@ export function waitBetweenMovements(callback, random = Math.random, schedule = 
 }
 export function reversalAngles(random = Math.random) {
   const angles = [45 + random() * 315, -(45 + random() * 315)];
-  while (random() < .25) angles.push((angles.length % 2 ? -1 : 1) * (45 + random() * 315));
+  while (random() < .50) angles.push((angles.length % 2 ? -1 : 1) * (45 + random() * 315));
   return angles;
 }
 export function abruptFinishPlan(plan, random = Math.random) {

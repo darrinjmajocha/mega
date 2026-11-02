@@ -72,7 +72,7 @@ The included workflow tests, builds and deploys main pushes when Pages uses GitH
 
 ### Additional suspense behavior
 
-Cruising can smoothly speed up and slow down. After a suspense stop, there is a 5% chance of an extra unchanged normal-mode toss (with throw and halfway woosh cues), or a 20% chance of rapid alternating-direction movements. The first clockwise movement and counterclockwise reversal are guaranteed within that sequence; each subsequent reversal has a 25% continuation chance. Each movement loops its woosh for the movement duration, and a final short movement settles upright. Final colors remain predetermined and only the ultimate landing triggers the landing effect. Volume levels are 50%, 25%, and muted.
+Cruising can smoothly speed up and slow down. After a suspense stop, there is a 5% chance of an extra unchanged normal-mode toss (with throw and halfway woosh cues), or a 20% chance of rapid alternating-direction movements. The first clockwise movement and counterclockwise reversal are guaranteed within that sequence; each subsequent reversal has a 50% continuation chance. Each movement loops its woosh for the movement duration, and a final short movement settles upright. Final colors remain predetermined and only the ultimate landing triggers the landing effect. Volume levels are 50%, 25%, and muted.
 
 Suspense pauses (including before reversals and the rare normal encore) range from 0.1–5.0 seconds in tenths. Linear weights give 0.1 seconds 1.8 times the probability of 5.0 seconds, gently favoring shorter pauses. Pause-only fake-outs hold their colors and orientation until the true landing. All controls remain locked throughout.
 
@@ -89,3 +89,5 @@ Non-pause-only suspense plans have a 3% chance of ending abruptly during cruisin
 ### Colorblind Mode
 
 The independent red/green setting adds centered R, B, Y, and G labels to main and celebration capsules. Its icon flips to green/red with labels when enabled. Labels scale with the SVG and rotate with the capsule, except that the main labels stay upright in Reduced Motion and fade together with their halves. The setting is locked during tosses. Green appears in cycling colors with the same 1% odds per half as landing rolls; cycling green never triggers celebrations.
+
+Selected Suspense, Reduced Motion, and Colorblind icons have a dark rounded outline on a white backing, so selection is indicated by shape and contrast as well as color. Forced-colors mode uses the system highlight outline.

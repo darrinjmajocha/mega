@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { reversalAngles, betweenMovementPause, waitBetweenMovements } from '../src/suspense-extras.js';
-test('reversals alternate and continue only below the 25 percent threshold', () => {
-  const values = [.2, .7, .249, .5, .1, .4, .25];
+test('reversals alternate and continue only below the 50 percent threshold', () => {
+  const values = [.2, .7, .499, .5, .1, .4, .50];
   const turns = reversalAngles(() => values.shift());
   assert.equal(turns.length, 4);
   assert.deepEqual(turns.map(Math.sign), [1,-1,1,-1]);
