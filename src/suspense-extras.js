@@ -26,7 +26,7 @@ export function abruptFinishPlan(plan, random = Math.random) {
 export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan(), run = animateSuspense } = {}) {
   plan = abruptFinishPlan(plan);
   if (plan.abruptAngle === undefined && Math.random() < .03) {
-    plan = { ...plan, freezeAt: plan.acceleration + plan.cruise * (.2 + Math.random() * .6), freezeDuration: 300 + Math.random() * 500 };
+    plan = { ...plan, freezeAt: plan.acceleration + plan.cruise * (.2 + Math.random() * .6), freezeDuration: 300 + Math.random() * 1200 };
   }
   let revealed = false;
   const waitForEncore = callback => plan.fake === 'pause' ? callback() : afterPause(callback);

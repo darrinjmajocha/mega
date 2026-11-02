@@ -92,6 +92,6 @@ Selected Suspense, Reduced Motion, and Colorblind icons have a dark rounded outl
 
 ### Rare surprises and green shortcuts
 
-Suspense has a 3% freeze-frame chance on spins without an abrupt ending: motion and cycling freeze for 0.3–0.8 seconds, then resume on the same timeline. Dramatic Anticlimax joins the zany pool. A separate final reveal roll gives a 0.3% green tease (when a non-green final half exists) or 2% nested-capsule pop-out. The green tease holds a false green preview for 0.65 seconds before restoring the true result. The nested capsule grows to full size over 1.2 seconds and uses the predetermined final pair. Landing audio and celebrations occur only afterward.
+Suspense has a 3% freeze-frame chance on spins without an abrupt ending: motion and cycling freeze for 0.3–1.5 seconds, then resume on the same timeline. Dramatic Anticlimax joins the zany pool. A separate final reveal roll gives a 0.3% green tease (when a non-green final half exists) or 2% nested-capsule pop-out. The green tease holds a false green preview for 0.65 seconds before restoring the true result. The nested capsule grows to full size over 1.2 seconds and uses the predetermined final pair. Landing audio and celebrations occur only afterward.
 
 Hold Alt+G while clicking Toss to force exactly one green half, with the other randomly red, blue, or yellow. Hold Alt+G+H for double green. These work in all modes and survive fake-outs and nesting. Releasing keys, leaving the window, or hiding the tab clears held-key state. Non-shortcut tosses keep the original probabilities.
