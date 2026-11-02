@@ -74,8 +74,12 @@ The included workflow tests, builds and deploys main pushes when Pages uses GitH
 
 Cruising can smoothly speed up and slow down. After a suspense stop, there is a 5% chance of an extra unchanged normal-mode toss (with throw and halfway woosh cues), or a 20% chance of rapid alternating-direction movements. The first clockwise movement and counterclockwise reversal are guaranteed within that sequence; each subsequent reversal has a 25% continuation chance. Each movement loops its woosh for the movement duration, and a final short movement settles upright. Final colors remain predetermined and only the ultimate landing triggers the landing effect. Volume levels are 50%, 25%, and muted.
 
-Suspense pauses (including before reversals and the rare normal encore) range from 0.1–5.0 seconds in tenths. Linear weights give 0.1 seconds 1.5 times the probability of 5.0 seconds, gently favoring shorter pauses. Pause-only fake-outs hold their colors and orientation until the true landing. All controls remain locked throughout.
+Suspense pauses (including before reversals and the rare normal encore) range from 0.1–5.0 seconds in tenths. Linear weights give 0.1 seconds 1.8 times the probability of 5.0 seconds, gently favoring shorter pauses. Pause-only fake-outs hold their colors and orientation until the true landing. All controls remain locked throughout.
 
 Between alternating movements, a fresh uniformly random pause is selected from 0.10 through 1.00 seconds in 0.01-second steps. Controls stay locked and no new woosh starts until the next movement. The initial suspense pause retains its existing 0.1–5.0-second distribution. Normal mode speed is unchanged.
 
-Pause-only suspense endings (20% of initial plans) reveal the predetermined final pair as the capsule stops, hold it unchanged throughout the pause, and land without any additional motion or recoloring. The landing sound and green celebration still wait until the pause ends. Color odds remain unchanged.
+Pause-only suspense endings (15% of initial plans) reveal the predetermined final pair as the capsule stops, hold it unchanged throughout the pause, and land without any additional motion or recoloring. The landing sound and green celebration still wait until the pause ends. Color odds remain unchanged.
+
+### Zany finishes
+
+Stubborn quarter-turn, wind-up, ticking clock, false finish, sleepy spin, and indecisive colors are available as short extra finishes. Color swaps are eligible only when the predetermined halves differ; final outcomes are unchanged. Non-pause-only tosses have a 25% chance of a new effect, with an 18% chance of a second distinct effect (maximum two). Each effect is 0.9–1.7 seconds. Initial no-fake-out probability is now 45%; pause-only is 15%. Short pauses have slightly more weight. Existing normal and reduced modes are unchanged.

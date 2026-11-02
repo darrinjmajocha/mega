@@ -1,5 +1,6 @@
-import { afterPause } from './pauses.js?v=pauses-10';
-import { animateSuspense, createSuspensePlan } from './modes.js?v=suspense-11';
+import { animateZany } from './zany.js?v=zany-13';
+import { afterPause } from './pauses.js?v=zany-13';
+import { animateSuspense, createSuspensePlan } from './modes.js?v=zany-13';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 export function betweenMovementPause(random = Math.random) {
   return (10 + Math.floor(random() * 91)) * 10;
@@ -60,7 +61,8 @@ export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan()
         requestAnimationFrame(tick);
       }
       callbacks.frame(0); waitForEncore(next);
-    } else callbacks.land();
+    } else if (choice < .50) animateZany(callbacks);
+    else callbacks.land();
   } });
 }
 

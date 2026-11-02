@@ -3,9 +3,9 @@ import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 import { AudioManager } from './audio.js?v=settings-9';
 import { celebrate } from './particles.js?v=seamless-5';
-import { animateExtendedSuspense } from './suspense-extras.js?v=hold-12';
+import { animateExtendedSuspense } from './suspense-extras.js?v=zany-13';
 import { Settings, MODE_LABELS } from './settings.js?v=settings-9';
-import { animateReduced, animateSuspense } from './modes.js?v=suspense-11';
+import { animateReduced, animateSuspense } from './modes.js?v=zany-13';
 
 const holder = document.querySelector('#capsule');
 const button = document.querySelector('#toss');
@@ -103,6 +103,8 @@ button.addEventListener('click', async () => {
     lock(false);
   };
   const callbacks = {
+    canSwap: finalPair[0] !== finalPair[1],
+    swapPreview: swapped => paintCapsule(svg, swapped ? [finalPair[1], finalPair[0]] : finalPair),
     revealFinal: () => paintCapsule(svg, finalPair),
     frame: angle => { holder.style.transform = 'rotate(' + angle + 'deg)'; },
     cycle: () => paintCapsule(svg, spinningPair()),

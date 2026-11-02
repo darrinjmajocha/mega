@@ -8,7 +8,7 @@ test('all fifty tenths are reachable with a gentle lower bias', () => {
   assert.equal(randomPause(()=>0),100);
   assert.equal(randomPause(()=>.999999),5000);
   const ratio=counts.get(100)/counts.get(5000);
-  assert.ok(ratio>1.49 && ratio<1.51);
+  assert.ok(ratio>1.79 && ratio<1.81);
 });
 test('actions wait for the sampled pause before starting',()=>{
   let pending, delay, called=false;
