@@ -1,3 +1,4 @@
+import { randomPause } from './pauses.js?v=pauses-10';
 // These animations are separate from the unchanged normal-mode timeline.
 const clamp = value => Math.max(0, Math.min(1, value));
 export const REDUCED_DURATION = 2000;
@@ -28,9 +29,9 @@ export function createSuspensePlan(random = Math.random) {
   const cruise = (turns * 360 - velocity * (acceleration + deceleration) / 2) / velocity;
   const stop = acceleration + cruise + deceleration;
   const choice = random();
-  const fake = choice < .6 ? 'none' : choice < .8 ? 'colors' : 'spin';
-  const pause = fake === 'none' ? 0 : 250 + random() * 450;
-  const encore = fake === 'none' ? 0 : fake === 'spin' ? 300 : 500;
+  const fake = choice < .4 ? 'none' : choice < .6 ? 'pause' : choice < .8 ? 'colors' : 'spin';
+  const pause = fake === 'none' ? 0 : randomPause(random);
+  const encore = (fake === 'none' || fake === 'pause') ? 0 : fake === 'spin' ? 300 : 500;
   const plan = { rpm, velocity, acceleration, deceleration, cruise, turns, stop, fake, pause, encore, duration: stop + pause + encore };
   // Cues belong to actual half-turn crossings, even with variable speed.
   plan.cues = Array.from({ length: turns }, (_, i) => {

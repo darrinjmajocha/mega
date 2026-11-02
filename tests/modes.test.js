@@ -20,7 +20,7 @@ test('suspense plans have bounded speeds, whole turns, long deceleration and syn
     variants.add(p.fake);
     assert.ok(p.rpm >= 60 && p.rpm <= 300);
     assert.ok(p.cruise > 0 && p.deceleration > p.acceleration * 2);
-    assert.ok(p.duration > 3000 && p.duration < 13000);
+    assert.ok(p.duration > 3000 && p.duration < 18000);
     assert.equal(suspenseAngleAt(p, p.stop), p.turns * 360);
     assert.equal(suspenseAngleAt(p, p.duration), (p.turns + (p.fake === 'spin' ? 1 : 0)) * 360);
     for (let j = 0; j < p.turns; j++) assert.ok(Math.abs(suspenseAngleAt(p, p.cues[j]) - (j + .5) * 360) < 1e-6);
@@ -29,10 +29,10 @@ test('suspense plans have bounded speeds, whole turns, long deceleration and syn
       assert.ok(Math.abs((suspenseAngleAt(p,t+h)-suspenseAngleAt(p,t-h))/(2*h)-p.velocity) < 0.0001);
     }
   }
-  assert.deepEqual([...variants].sort(), ['colors', 'none', 'spin']);
+  assert.deepEqual([...variants].sort(), ['colors', 'none', 'pause', 'spin']);
 });
 test('fake-outs postpone landing and emit no extra landing callbacks', () => {
-  for (const choice of [.2, .7, .9]) {
+  for (const choice of [.2, .5, .7, .9]) {
     let index = 0;
     const p = createSuspensePlan(() => index++ === 4 ? choice : .5);
     let tick, lands = 0, cycles = 0, sounds = 0;
@@ -42,7 +42,7 @@ test('fake-outs postpone landing and emit no extra landing callbacks', () => {
       tick(p.stop); assert.equal(lands, 0);
       const before = cycles;
       tick(p.stop + p.pause - 1); assert.equal(cycles, before);
-      tick(p.stop + p.pause + 1); assert.ok(cycles > before);
+      if (p.fake !== 'pause') { tick(p.stop + p.pause + 1); assert.ok(cycles > before); }
     }
     tick(p.duration);
     assert.equal(lands, 1); assert.equal(sounds, p.cues.length);

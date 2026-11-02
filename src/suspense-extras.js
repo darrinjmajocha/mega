@@ -1,4 +1,5 @@
-import { animateSuspense, createSuspensePlan } from './modes.js?v=settings-8';
+import { afterPause } from './pauses.js?v=pauses-10';
+import { animateSuspense, createSuspensePlan } from './modes.js?v=pauses-10';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 export function reversalAngles(random = Math.random) {
   const angles = [45 + random() * 315, -(45 + random() * 315)];
@@ -7,6 +8,7 @@ export function reversalAngles(random = Math.random) {
 }
 export function animateExtendedSuspense(callbacks) {
   const plan = createSuspensePlan();
+  const waitForEncore = callback => plan.fake === 'pause' ? callback() : afterPause(callback);
   const vary = Math.random() < .65;
   const amplitude = Math.min(.12, Math.max(0, (300 / plan.rpm - 1) / 1.5));
   const startAngle = plan.velocity * plan.acceleration / 2;
@@ -21,8 +23,7 @@ export function animateExtendedSuspense(callbacks) {
     const choice = Math.random();
     if (choice < .05) {
       callbacks.frame(0);
-      callbacks.throwAgain();
-      animateToss(callbacks);
+      waitForEncore(() => { callbacks.throwAgain(); animateToss(callbacks); });
     } else if (choice < .25) {
       const turns = reversalAngles();
       const total = turns.reduce((a,b) => a+b, 0);
@@ -44,7 +45,7 @@ export function animateExtendedSuspense(callbacks) {
         }
         requestAnimationFrame(tick);
       }
-      callbacks.frame(0); next();
+      callbacks.frame(0); waitForEncore(next);
     } else callbacks.land();
   } });
 }
