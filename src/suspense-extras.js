@@ -1,4 +1,4 @@
-import { animateZany } from './zany.js?v=zany-13';
+import { animateZany } from './zany.js?v=chains-14';
 import { afterPause } from './pauses.js?v=zany-13';
 import { animateSuspense, createSuspensePlan } from './modes.js?v=zany-13';
 import { animateToss } from './animation.js?v=mid-woosh-7';
@@ -13,14 +13,26 @@ export function reversalAngles(random = Math.random) {
   while (random() < .25) angles.push((angles.length % 2 ? -1 : 1) * (45 + random() * 315));
   return angles;
 }
+export function abruptFinishPlan(plan, random = Math.random) {
+  if (plan.fake === 'pause' || random() >= .03) return plan;
+  const startAngle = plan.velocity * plan.acceleration / 2;
+  const firstTurn = Math.floor(startAngle / 360) + 1;
+  const lastTurn = Math.floor((startAngle + plan.velocity * plan.cruise) / 360);
+  const turn = firstTurn + Math.floor(random() * (lastTurn - firstTurn + 1));
+  const abruptAngle = turn * 360;
+  const duration = plan.acceleration + (abruptAngle - startAngle) / plan.velocity;
+  return { ...plan, abruptAngle, duration, cues: plan.cues.filter(t => t < duration) };
+}
 export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan(), run = animateSuspense } = {}) {
+  plan = abruptFinishPlan(plan);
   let revealed = false;
   const waitForEncore = callback => plan.fake === 'pause' ? callback() : afterPause(callback);
-  const vary = Math.random() < .65;
+  const vary = plan.abruptAngle === undefined && Math.random() < .65;
   const amplitude = Math.min(.12, Math.max(0, (600 / plan.rpm - 1) / 1.5));
   const startAngle = plan.velocity * plan.acceleration / 2;
   const distance = plan.velocity * plan.cruise;
   run({ ...callbacks, plan, frame(angle) {
+    if (plan.abruptAngle !== undefined) angle = Math.min(angle, plan.abruptAngle);
     if (plan.fake === 'pause' && angle >= plan.turns * 360 && !revealed) {
       callbacks.revealFinal();
       revealed = true;
@@ -31,7 +43,7 @@ export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan()
     }
     callbacks.frame(angle);
   }, land() {
-    if (plan.fake === 'pause') { callbacks.land(); return; }
+    if (plan.fake === 'pause' || plan.abruptAngle !== undefined) { callbacks.land(); return; }
     const choice = Math.random();
     if (choice < .05) {
       callbacks.frame(0);

@@ -3,7 +3,7 @@ import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 import { AudioManager } from './audio.js?v=settings-9';
 import { celebrate } from './particles.js?v=seamless-5';
-import { animateExtendedSuspense } from './suspense-extras.js?v=zany-13';
+import { animateExtendedSuspense } from './suspense-extras.js?v=chains-14';
 import { Settings, MODE_LABELS } from './settings.js?v=settings-9';
 import { animateReduced, animateSuspense } from './modes.js?v=zany-13';
 

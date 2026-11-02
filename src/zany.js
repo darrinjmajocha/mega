@@ -11,9 +11,9 @@ export function chooseZany(canSwap, random = Math.random) {
   const names = Object.keys(EFFECTS).filter(name => canSwap || name !== 'indecisive');
   const first = names[Math.floor(random() * names.length)];
   const result = [first];
-  if (random() < .18) {
-    const remaining = names.filter(name => name !== first);
-    result.push(remaining[Math.floor(random() * remaining.length)]);
+  if (random() < .45) {
+    result.push(names[Math.floor(random() * names.length)]);
+    if (random() < .15) result.push(names[Math.floor(random() * names.length)]);
   }
   return result;
 }

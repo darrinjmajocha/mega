@@ -82,4 +82,6 @@ Pause-only suspense endings (15% of initial plans) reveal the predetermined fina
 
 ### Zany finishes
 
-Stubborn quarter-turn, wind-up, ticking clock, false finish, sleepy spin, and indecisive colors are available as short extra finishes. Color swaps are eligible only when the predetermined halves differ; final outcomes are unchanged. Non-pause-only tosses have a 25% chance of a new effect, with an 18% chance of a second distinct effect (maximum two). Each effect is 0.9–1.7 seconds. Initial no-fake-out probability is now 45%; pause-only is 15%. Short pauses have slightly more weight. Existing normal and reduced modes are unchanged.
+Stubborn quarter-turn, wind-up, ticking clock, false finish, sleepy spin, and indecisive colors are available as short extra finishes. Color swaps are eligible only when the predetermined halves differ; final outcomes are unchanged. Non-pause-only tosses have a 25% chance of a new effect, with an 45% chance of a second effect, then a 15% conditional chance of a third (maximum three; repeats allowed). Each effect is 0.9–1.7 seconds. Initial no-fake-out probability is now 45%; pause-only is 15%. Short pauses have slightly more weight. Existing normal and reduced modes are unchanged.
+
+Non-pause-only suspense plans have a 3% chance of ending abruptly during cruising at a whole-turn boundary. These endings remain upright, skip further fake-outs, and preserve the final color distribution.
