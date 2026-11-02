@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { celebrate } from '../src/particles.js';
-test('celebrations create exactly 0/10/100 nodes and remove all after time elapses', () => {
+test('celebrations create exactly 0/25/100 nodes and remove all after time elapses', () => {
   const previous = Object.fromEntries(['document', 'innerWidth', 'innerHeight', 'requestAnimationFrame'].map(k => [k, globalThis[k]]));
   let pending;
   globalThis.innerWidth = 390;
@@ -10,7 +10,7 @@ test('celebrations create exactly 0/10/100 nodes and remove all after time elaps
   const makeNode = () => ({ style: {}, setAttribute() {}, querySelector: () => ({ setAttribute() {} }), append() {}, remove() { this.removed = true; } });
   globalThis.document = { createElement: makeNode, createElementNS: makeNode };
   try {
-    for (const count of [0, 10, 100]) {
+    for (const count of [0, 25, 100]) {
       const nodes = [];
       pending = null;
       celebrate({ append: node => nodes.push(node) }, count);

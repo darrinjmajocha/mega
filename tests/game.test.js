@@ -17,7 +17,7 @@ test('two independent draws include same-color results', () => {
 test('all 16 landing pairs select exactly one sound and correct particle count', () => {
   for (const a of Object.keys(COLORS)) for (const b of Object.keys(COLORS)) {
     const green = Number(a === 'green') + Number(b === 'green');
-    assert.deepEqual(landingEffect([a, b]), { sound: ['hit', 'hit_g', 'hit_gg'][green], count: [0, 10, 100][green] });
+    assert.deepEqual(landingEffect([a, b]), { sound: ['hit', 'hit_g', 'hit_gg'][green], count: [0, 25, 100][green] });
   }
 });
 test('each bottom RGB channel is rounded to 90% of base', () => {

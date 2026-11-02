@@ -10,7 +10,7 @@ export function darken(hex) {
 }
 export function landingEffect(pair) {
   const greens = pair.filter(color => color === 'green').length;
-  return { sound: ['hit', 'hit_g', 'hit_gg'][greens], count: [0, 10, 100][greens] };
+  return { sound: ['hit', 'hit_g', 'hit_gg'][greens], count: [0, 25, 100][greens] };
 }
 
 // Visual cycling uses the same independent 33/33/33/1 distribution.

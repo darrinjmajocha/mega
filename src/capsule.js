@@ -1,4 +1,4 @@
-import { COLORS, darken } from './colors.js?v=colorblind-15';
+import { COLORS, darken } from './colors.js?v=rain-16';
 export function createCapsule() {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 200 400');

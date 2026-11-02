@@ -1,8 +1,8 @@
-import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=colorblind-15';
-import { createCapsule, paintCapsule } from './capsule.js?v=colorblind-15';
+import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
+import { createCapsule, paintCapsule } from './capsule.js?v=rain-16';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 import { AudioManager } from './audio.js?v=settings-9';
-import { celebrate } from './particles.js?v=colorblind-15';
+import { celebrate } from './particles.js?v=rain-16';
 import { animateExtendedSuspense } from './suspense-extras.js?v=chains-14';
 import { Settings, MODE_LABELS } from './settings.js?v=colorblind-15';
 import { animateReduced, animateSuspense } from './modes.js?v=zany-13';
