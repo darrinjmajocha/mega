@@ -77,3 +77,5 @@ Cruising can smoothly speed up and slow down. After a suspense stop, there is a 
 Suspense pauses (including before reversals and the rare normal encore) range from 0.1–5.0 seconds in tenths. Linear weights give 0.1 seconds 1.5 times the probability of 5.0 seconds, gently favoring shorter pauses. Pause-only fake-outs hold their colors and orientation until the true landing. All controls remain locked throughout.
 
 Between alternating movements, a fresh uniformly random pause is selected from 0.10 through 1.00 seconds in 0.01-second steps. Controls stay locked and no new woosh starts until the next movement. The initial suspense pause retains its existing 0.1–5.0-second distribution. Normal mode speed is unchanged.
+
+Pause-only suspense endings (20% of initial plans) reveal the predetermined final pair as the capsule stops, hold it unchanged throughout the pause, and land without any additional motion or recoloring. The landing sound and green celebration still wait until the pause ends. Color odds remain unchanged.

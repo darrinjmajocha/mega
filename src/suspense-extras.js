@@ -12,20 +12,25 @@ export function reversalAngles(random = Math.random) {
   while (random() < .25) angles.push((angles.length % 2 ? -1 : 1) * (45 + random() * 315));
   return angles;
 }
-export function animateExtendedSuspense(callbacks) {
-  const plan = createSuspensePlan();
+export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan(), run = animateSuspense } = {}) {
+  let revealed = false;
   const waitForEncore = callback => plan.fake === 'pause' ? callback() : afterPause(callback);
   const vary = Math.random() < .65;
   const amplitude = Math.min(.12, Math.max(0, (600 / plan.rpm - 1) / 1.5));
   const startAngle = plan.velocity * plan.acceleration / 2;
   const distance = plan.velocity * plan.cruise;
-  animateSuspense({ ...callbacks, plan, frame(angle) {
+  run({ ...callbacks, plan, frame(angle) {
+    if (plan.fake === 'pause' && angle >= plan.turns * 360 && !revealed) {
+      callbacks.revealFinal();
+      revealed = true;
+    }
     if (vary && angle > startAngle && angle < startAngle + distance) {
       const phase = (angle - startAngle) / distance;
       angle += amplitude * distance / (2 * Math.PI) * Math.sin(phase * 2 * Math.PI) ** 3;
     }
     callbacks.frame(angle);
   }, land() {
+    if (plan.fake === 'pause') { callbacks.land(); return; }
     const choice = Math.random();
     if (choice < .05) {
       callbacks.frame(0);

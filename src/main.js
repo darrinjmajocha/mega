@@ -3,7 +3,7 @@ import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 import { AudioManager } from './audio.js?v=settings-9';
 import { celebrate } from './particles.js?v=seamless-5';
-import { animateExtendedSuspense } from './suspense-extras.js?v=suspense-11';
+import { animateExtendedSuspense } from './suspense-extras.js?v=hold-12';
 import { Settings, MODE_LABELS } from './settings.js?v=settings-9';
 import { animateReduced, animateSuspense } from './modes.js?v=suspense-11';
 
@@ -103,6 +103,7 @@ button.addEventListener('click', async () => {
     lock(false);
   };
   const callbacks = {
+    revealFinal: () => paintCapsule(svg, finalPair),
     frame: angle => { holder.style.transform = 'rotate(' + angle + 'deg)'; },
     cycle: () => paintCapsule(svg, spinningPair()),
     woosh: () => audio.play('woosh'),
