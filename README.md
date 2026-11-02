@@ -25,9 +25,9 @@ Open http://127.0.0.1:4173. Rebuild after source changes and refresh. No package
 
 ## Settings and modes
 
-Settings are session-local and start at full volume with normal mode. All four buttons are disabled from Toss activation through preload, animation, fake-outs, and final landing.
+Settings are session-local and start at 50% volume with normal mode. All four buttons are disabled from Toss activation through preload, animation, fake-outs, and final landing.
 
-- **Volume:** red/red = full, empty/red = 50% gain, empty/empty = muted; the next click restores full. A shared Web Audio GainNode affects all overlapping sounds.
+- **Volume:** red/red = 50% gain, empty/red = 25% gain, empty/empty = muted; the next click restores 50%. A shared Web Audio GainNode affects all overlapping sounds.
 - **Suspense Mode:** blue/blue = off; purple/orange = on. Each toss chooses a peak of 60–300 RPM, a 0.35–0.8 second acceleration, a 2.4–4.8 second deceleration, and a bounded whole number of turns. Most finish normally; 20% pause and change colors, and 20% pause and perform one extra rapid turn. Fake-outs only cycle non-green display colors; they never change the predetermined final pair or play a premature landing sound.
 - **Reduced Motion Mode:** activating it turns both its yellow icon and the main capsule horizontal. Toss fades only the two color fills out over 0.5 seconds, pauses for one second, then fades the predetermined colors in together over 0.5 seconds. The outline stays visible, there is no spin or woosh, and the normal throw and appropriate landing sound remain. Existing green celebrations and odds are preserved.
 - The two modes cannot be active together. Attempting to switch without disabling the current mode jitters its icon for one second and displays a temporary centered message.
@@ -69,3 +69,7 @@ Game: https://darrinjmajocha.github.io/mega/
 
 The included workflow tests, builds and deploys main pushes when Pages uses GitHub Actions. Source-branch Pages hosting also works: audio loading supports both public/audio/ in the source and audio/ in the build output. Keep uploaded MP3 files in public/audio/. No package installation is needed.
 
+
+### Additional suspense behavior
+
+Cruising can smoothly speed up and slow down. After a suspense stop, there is a 5% chance of an extra unchanged normal-mode toss (with throw and halfway woosh cues), or a 20% chance of rapid alternating-direction movements. The first clockwise movement and counterclockwise reversal are guaranteed within that sequence; each subsequent reversal has a 25% continuation chance. Each movement loops its woosh for the movement duration, and a final short movement settles upright. Final colors remain predetermined and only the ultimate landing triggers the landing effect. Volume levels are 50%, 25%, and muted.

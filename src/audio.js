@@ -7,7 +7,7 @@ export class AudioManager {
   constructor() {
     this.context = null;
     this.buffers = new Map();
-    this.volume = 1;
+    this.volume = .5;
     this.output = null;
     this.ready = this.load();
   }
@@ -42,7 +42,7 @@ export class AudioManager {
     this.volume = Math.max(0, Math.min(1, value));
     if (this.output) this.output.gain.value = this.volume;
   }
-  play(name) {
+  play(name, duration) {
     const buffer = this.buffers.get(name);
     if (!this.context || !buffer) return;
     const source = this.context.createBufferSource();
@@ -50,6 +50,8 @@ export class AudioManager {
     source.connect(this.output);
     source.onended = () => source.disconnect();
     source.start();
+    if (duration !== undefined) { source.loop = true; source.stop(this.context.currentTime + duration); }
   }
 }
+
 

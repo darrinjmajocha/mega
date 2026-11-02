@@ -1,10 +1,11 @@
 import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=seamless-5';
 import { createCapsule, paintCapsule } from './capsule.js?v=seamless-5';
 import { animateToss } from './animation.js?v=mid-woosh-7';
-import { AudioManager } from './audio.js?v=settings-8';
+import { AudioManager } from './audio.js?v=settings-9';
 import { celebrate } from './particles.js?v=seamless-5';
-import { Settings, MODE_LABELS } from './settings.js?v=settings-8';
-import { animateReduced, animateSuspense } from './modes.js?v=settings-8';
+import { animateExtendedSuspense } from './suspense-extras.js?v=settings-9';
+import { Settings, MODE_LABELS } from './settings.js?v=settings-9';
+import { animateReduced, animateSuspense } from './modes.js?v=settings-9';
 
 const holder = document.querySelector('#capsule');
 const button = document.querySelector('#toss');
@@ -30,7 +31,7 @@ function updateSettings() {
   const empty = 'var(--page-background)';
   fillIcon(icons.volume, settings.volumeIndex === 0 ? COLORS.red : empty,
     settings.volumeIndex === 2 ? empty : darken(COLORS.red));
-  controls.volume.setAttribute('aria-label', 'Volume: ' + ['full', 'half', 'muted'][settings.volumeIndex]);
+  controls.volume.setAttribute('aria-label', 'Volume: ' + ['50%', '25%', 'muted'][settings.volumeIndex]);
   fillIcon(icons.suspense, settings.mode === 'suspense' ? '#9b51e0' : COLORS.blue,
     darken(settings.mode === 'suspense' ? '#f28c28' : COLORS.blue));
   fillIcon(icons.reduced, COLORS.yellow, darken(COLORS.yellow));
@@ -105,6 +106,8 @@ button.addEventListener('click', async () => {
     frame: angle => { holder.style.transform = 'rotate(' + angle + 'deg)'; },
     cycle: () => paintCapsule(svg, spinningPair()),
     woosh: () => audio.play('woosh'),
+    rotationWoosh: duration => audio.play('woosh', duration),
+    throwAgain: () => audio.play('thrown'),
     land
   };
   if (mode === 'reduced') {
@@ -114,9 +117,11 @@ button.addEventListener('click', async () => {
       land
     });
   } else if (mode === 'suspense') {
-    animateSuspense(callbacks);
+    animateExtendedSuspense(callbacks);
   } else {
     animateToss(callbacks);
   }
 });
+
+
 
