@@ -2,8 +2,8 @@ import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js
 import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
 import { createCapsule, paintCapsule } from './capsule.js?v=rain-16';
 import { animateToss } from './animation.js?v=mid-woosh-7';
-import { AudioManager } from './audio.js?v=settings-9';
-import { celebrate } from './particles.js?v=rain-19';
+import { AudioManager } from './audio.js?v=rain-21';
+import { celebrate } from './particles.js?v=rain-21';
 import { animateExtendedSuspense } from './suspense-extras.js?v=freeze-20';
 import { Settings, MODE_LABELS } from './settings.js?v=colorblind-15';
 import { animateReduced, animateSuspense } from './modes.js?v=surprises-18';
