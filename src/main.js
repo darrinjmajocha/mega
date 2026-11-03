@@ -1,6 +1,6 @@
 import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=surprises-18';
 import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
-import { createCapsule, paintCapsule } from './capsule.js?v=rain-16';
+import { createCapsule, paintCapsule } from './capsule.js?v=outline-24';
 import { animateToss } from './animation.js?v=midpoint-22';
 import { AudioManager } from './audio.js?v=rain-21';
 import { celebrate } from './particles.js?v=rain-21';

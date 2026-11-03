@@ -63,3 +63,5 @@ button:disabled { cursor: default; opacity: .45; }
 .dark #mode-notice { border-color: currentColor; }
 .dark .setting[aria-pressed="true"] .setting-icon { outline-color: currentColor; background: #333; }
 .dark button:focus-visible { outline-color: #8db8ff; }
+
+.dark #capsule [data-outline], .dark .matryoshka-shell [data-outline] { stroke: #fff; }
