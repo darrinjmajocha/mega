@@ -36,7 +36,7 @@ button:disabled { cursor: default; opacity: .45; }
 .reduced-motion #capsule [data-letter-top] { transform: rotate(-90deg); transform-origin: 100px 100px; }
 .reduced-motion #capsule [data-letter-bottom] { transform: rotate(-90deg); transform-origin: 100px 300px; }
 @media (max-width: 800px), (max-height: 650px) {
-  main { min-height: calc(100svh - 196px); }
+  main { min-height: calc(100svh - 242px); }
 }
 
 /* A shape-based selected state, independent of the capsule's colors. */
@@ -54,3 +54,12 @@ button:disabled { cursor: default; opacity: .45; }
 #capsule { position: relative; z-index: 2; }
 .matryoshka-shell { position: absolute; width: 43%; z-index: 1; pointer-events: none; }
 .colorblind .matryoshka-shell .color-letter { display: block; }
+
+:root.dark { color-scheme: dark; --page-background: #121212; color: #f5f5f5; }
+.dark .setting { color: inherit; }
+.dark .setting:hover:enabled { background: #303030; }
+.dark #toss { background: #eee; color: #121212; border-color: #eee; }
+.dark #toss:hover:enabled { background: #ccc; }
+.dark #mode-notice { border-color: currentColor; }
+.dark .setting[aria-pressed="true"] .setting-icon { outline-color: currentColor; background: #333; }
+.dark button:focus-visible { outline-color: #8db8ff; }

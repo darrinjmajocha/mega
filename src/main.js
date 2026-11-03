@@ -16,7 +16,7 @@ paintCapsule(svg, ['red', 'blue']);
 const halves = [svg.querySelector('[data-top]'), svg.querySelector('[data-bottom]'), svg.querySelector('[data-letter-top]'), svg.querySelector('[data-letter-bottom]')];
 const audio = new AudioManager();
 const settings = new Settings();
-const controls = Object.fromEntries(['volume', 'suspense', 'reduced', 'colorblind'].map(id => [id, document.querySelector('#' + id)]));
+const controls = Object.fromEntries(['volume', 'suspense', 'reduced', 'colorblind', 'dark'].map(id => [id, document.querySelector('#' + id)]));
 const icons = Object.fromEntries(Object.entries(controls).map(([id, control]) => {
   const icon = createCapsule();
   control.querySelector('.setting-icon').append(icon);
@@ -28,7 +28,12 @@ function fillIcon(icon, top, bottom) {
   icon.querySelector('[data-top]').setAttribute('fill', top);
   icon.querySelector('[data-bottom]').setAttribute('fill', bottom);
 }
+let dark = false;
 function updateSettings() {
+  document.documentElement.classList.toggle('dark', dark);
+  controls.dark.setAttribute('aria-pressed', String(dark));
+  fillIcon(icons.dark, dark ? '#fff' : '#000', dark ? '#fff' : '#000');
+  document.querySelector('meta[name="theme-color"]').content = dark ? '#121212' : '#f5f3ed';
   document.body.classList.toggle('colorblind', settings.colorblind);
   document.body.classList.toggle('reduced-motion', settings.mode === 'reduced');
   controls.colorblind.setAttribute('aria-pressed', String(settings.colorblind));
@@ -80,6 +85,11 @@ for (const mode of ['suspense', 'reduced']) {
     if (result.changed) { clearNotice(); updateSettings(); }
   });
 }
+controls.dark.addEventListener('click', () => {
+  if (settings.busy) return;
+  dark = !dark;
+  updateSettings();
+});
 controls.colorblind.addEventListener('click', () => {
   if (settings.toggleColorblind()) updateSettings();
 });
