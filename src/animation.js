@@ -10,17 +10,19 @@ export function angleAt(ms) {
   if (ms < DURATION) return 1440 + 360 * (1 - accelerate(1 - (ms - 1250) / 500));
   return 1800;
 }
-export function animateToss({ frame, cycle, woosh, land, now = performance.now.bind(performance), request = requestAnimationFrame }) {
+export function animateToss({ frame, cycle, woosh, land, revealMidpoint, now = performance.now.bind(performance), request = requestAnimationFrame }) {
   const start = now();
   let nextWoosh = 0;
   let lastCycle = -1;
+  let revealed = false;
   function tick(timestamp) {
     const elapsed = Math.max(0, timestamp - start);
     while (nextWoosh < WOOSH_TIMES.length && elapsed >= WOOSH_TIMES[nextWoosh]) woosh(nextWoosh++);
     frame(angleAt(elapsed));
+    if (revealMidpoint && !revealed && elapsed >= DURATION / 2) { revealMidpoint(); revealed = true; }
     if (elapsed >= DURATION) { land(); return; }
     const slot = Math.floor(elapsed / 125);
-    if (slot !== lastCycle) { cycle(); lastCycle = slot; }
+    if (!revealMidpoint && slot !== lastCycle) { cycle(); lastCycle = slot; }
     request(tick);
   }
   tick(start);

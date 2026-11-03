@@ -1,7 +1,7 @@
 import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=surprises-18';
 import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
 import { createCapsule, paintCapsule } from './capsule.js?v=rain-16';
-import { animateToss } from './animation.js?v=mid-woosh-7';
+import { animateToss } from './animation.js?v=midpoint-22';
 import { AudioManager } from './audio.js?v=rain-21';
 import { celebrate } from './particles.js?v=rain-21';
 import { animateExtendedSuspense } from './suspense-extras.js?v=freeze-20';
@@ -162,7 +162,7 @@ button.addEventListener('click', async event => {
   } else if (mode === 'suspense') {
     animateExtendedSuspense(callbacks);
   } else {
-    animateToss(callbacks);
+    animateToss({ ...callbacks, revealMidpoint: callbacks.revealFinal });
   }
 });
 
