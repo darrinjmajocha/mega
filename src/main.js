@@ -57,8 +57,10 @@ function updateSettings() {
   fillIcon(icons.reduced, COLORS.yellow, darken(COLORS.yellow));
   controls.suspense.setAttribute('aria-pressed', String(settings.mode === 'suspense'));
   controls.reduced.setAttribute('aria-pressed', String(settings.mode === 'reduced'));
-  holder.style.transform = settings.mode === 'reduced' ? 'rotate(90deg)' : 'rotate(0deg)';
-  icons.reduced.style.transform = settings.mode === 'reduced' ? 'rotate(90deg)' : 'rotate(0deg)';
+  for (const mega of document.querySelectorAll('#capsule, .player-mega')) {
+    mega.style.transform = settings.mode === 'reduced' ? 'rotate(-90deg)' : 'rotate(0deg)';
+  }
+  icons.reduced.style.transform = settings.mode === 'reduced' ? 'rotate(-90deg)' : 'rotate(0deg)';
 }
 function lock(busy) {
   settings.busy = busy;
@@ -154,6 +156,7 @@ function setupPlayers(n){
     players.push(mega);
   }
   action($('#scores'),'Reset all scores',()=>$('#scores').querySelectorAll('output').forEach(o=>o.value='0'));
+  updateSettings();
   navigate('local');
 }
 function multiplayerSpin(cb,duration){
@@ -215,7 +218,7 @@ function spin(holder,finalPair,duration,revealDelay=0){
   const halves=svg.querySelectorAll('[data-top],[data-bottom],.symbol');
   return new Promise(resolve=>{
   const land = () => {
-    holder.style.transform = mode === 'reduced' ? 'rotate(90deg)' : 'rotate(0deg)';
+    holder.style.transform = mode === 'reduced' ? 'rotate(-90deg)' : 'rotate(0deg)';
     for (const half of halves) half.style.fillOpacity = '1';
     paintCapsule(svg, finalPair);
     holder.setAttribute('aria-label', finalPair[0] + ' and ' + finalPair[1] + ' megavitamin');

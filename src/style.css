@@ -33,8 +33,8 @@ button:disabled { cursor: default; opacity: .45; }
 
 .color-letter { display: none; font: 800 68px Arial, sans-serif; fill: #111; stroke: #fff; stroke-width: 2px; paint-order: stroke; pointer-events: none; }
 .colorblind #capsule .color-letter, .colorblind #particles .color-letter, .show-letters .color-letter { display: block; }
-.reduced-motion #capsule [data-letter-top] { transform: rotate(-90deg); transform-origin: 100px 100px; }
-.reduced-motion #capsule [data-letter-bottom] { transform: rotate(-90deg); transform-origin: 100px 300px; }
+.reduced-motion #capsule [data-letter-top] { transform: rotate(90deg); transform-origin: 100px 100px; }
+.reduced-motion #capsule [data-letter-bottom] { transform: rotate(90deg); transform-origin: 100px 300px; }
 @media (max-width: 800px), (max-height: 650px) {
   main { min-height: calc(100svh - 242px); }
 }
