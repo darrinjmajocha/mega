@@ -3,19 +3,19 @@ import { randomPause } from './pauses.js?v=zany-13';
 // These animations are separate from the unchanged normal-mode timeline.
 const clamp = value => Math.max(0, Math.min(1, value));
 export const REDUCED_DURATION = 2000;
-export function reducedOpacityAt(ms) {
+export function reducedOpacityAt(ms, revealDelay = 0) {
   if (ms < 500) return 1 - clamp(ms / 500);
-  if (ms < 1500) return 0;
-  return clamp((ms - 1500) / 500);
+  if (ms < 1500 + revealDelay) return 0;
+  return clamp((ms - 1500 - revealDelay) / 500);
 }
-export function animateReduced({ fade, reveal, land, now = performance.now.bind(performance), request = requestAnimationFrame }) {
+export function animateReduced({ fade, reveal, land, revealDelay = 0, now = performance.now.bind(performance), request = requestAnimationFrame }) {
   const start = now();
   let revealed = false;
   function tick(timestamp) {
     const elapsed = timestamp - start;
     if (!revealed && elapsed >= 500) { reveal(); revealed = true; }
-    fade(reducedOpacityAt(elapsed));
-    if (elapsed >= REDUCED_DURATION) { land(); return; }
+    fade(reducedOpacityAt(elapsed, revealDelay));
+    if (elapsed >= REDUCED_DURATION + revealDelay) { land(); return; }
     request(tick);
   }
   tick(start);

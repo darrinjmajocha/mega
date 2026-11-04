@@ -10,6 +10,35 @@ test('reduced mode fades both colors out, holds a second, fades in, then lands o
   tick(2000);
   assert.equal(reveals, 1); assert.equal(lands, 1); assert.equal(opacity, 1);
 });
+test('multiplayer reduced reveals wait after a shared fade and land one second apart', () => {
+  const landed = [];
+  const players = [2, 0, 3, 1].map((slot, player) => {
+    const state = {};
+    animateReduced({
+      revealDelay: slot * 1000,
+      now: () => 0,
+      request: tick => { state.tick = tick; },
+      fade: opacity => { state.opacity = opacity; },
+      reveal: () => {},
+      land: () => landed.push(player)
+    });
+    return state;
+  });
+  for (const time of [500, 1000, 1500]) {
+    for (const player of players) player.tick(time);
+    assert.ok(players.every(player => player.opacity === 0));
+    assert.equal(landed.length, 0);
+  }
+  for (const [index, player] of [1, 3, 0, 2].entries()) {
+    const time = 2000 + index * 1000;
+    players[player].tick(time - 1);
+    assert.equal(landed.length, index);
+    players[player].tick(time);
+    assert.equal(players[player].opacity, 1);
+    assert.equal(landed.length, index + 1);
+  }
+  assert.deepEqual(landed, [1, 3, 0, 2]);
+});
 test('suspense plans have bounded speeds, whole turns, long deceleration and synchronized cues', () => {
   // Deterministic varying draws exercise the entire allowed range.
   let seed = 113;

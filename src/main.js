@@ -7,7 +7,7 @@ import { AudioManager } from './audio.js?v=modes26';
 import { celebrate } from './particles.js?v=modes26';
 import { animateExtendedSuspense } from './suspense-extras.js?v=freeze-20';
 import { Settings, MODE_LABELS } from './settings.js?v=colorblind-15';
-import { animateReduced, animateSuspense } from './modes.js?v=surprises-18';
+import { animateReduced, animateSuspense } from './modes.js?v=reduced-sequence29';
 
 const holder = document.querySelector('#capsule');
 const button = document.querySelector('#toss');
@@ -188,7 +188,7 @@ button.addEventListener('click',async event=>{
         const pair=forced||randomPair();
         const playerGreens=pair.filter(c=>c==='green').length;
         greens=Math.max(greens,playerGreens);
-        await spin(player,pair,duration);remaining--;
+        await spin(player,pair,duration,slot*1000);remaining--;
         audio.play(remaining===0 && greens?['hit','hit_g','hit_gg'][greens]:'hit');
         if(playerGreens)burst(player);
       }));
@@ -202,7 +202,7 @@ button.addEventListener('click',async event=>{
     }
   }finally{lock(false);}
 });
-function spin(holder,finalPair,duration){
+function spin(holder,finalPair,duration,revealDelay=0){
   const mode=settings.mode, svg=holder.querySelector('svg');
   const halves=svg.querySelectorAll('[data-top],[data-bottom],.symbol');
   return new Promise(resolve=>{
@@ -249,6 +249,7 @@ function spin(holder,finalPair,duration){
   };
   if (mode === 'reduced') {
     animateReduced({
+      revealDelay,
       fade: opacity => { for (const half of halves) half.style.fillOpacity = String(opacity); },
       reveal: () => paintCapsule(svg, finalPair),
       land
