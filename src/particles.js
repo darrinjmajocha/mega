@@ -1,5 +1,5 @@
 import { randomPair } from './colors.js?v=rain-16';
-import { createCapsule, paintCapsule } from './capsule.js?v=rain-16';
+import { createCapsule, paintCapsule } from './capsule.js?v=modes26';
 export function celebrate(container, count, { now = () => performance.now(), request = requestAnimationFrame } = {}) {
   if (!count) return;
   const dramatic = count === 100;

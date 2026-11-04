@@ -5,9 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f3ed">
   <title>Mega Toss</title>
-  <link rel="stylesheet" href="./src/style.css?v=divider-25">
+  <link rel="stylesheet" href="./src/style.css?v=modes26">
 </head>
-<body>
+<body data-screen="menu">
+<svg width="0" height="0" style="position:absolute;width:0;height:0" aria-hidden="true"><defs>
+<pattern id="symbol-red" patternUnits="userSpaceOnUse" width="34" height="34"><circle cx="17" cy="17" r="7" fill="white"/></pattern>
+<pattern id="symbol-blue" patternUnits="userSpaceOnUse" width="30" height="30" patternTransform="rotate(45)"><rect width="9" height="30" fill="white"/></pattern>
+<pattern id="symbol-yellow" patternUnits="userSpaceOnUse" width="30" height="30"><rect width="9" height="30" fill="white"/></pattern>
+<pattern id="symbol-green" patternUnits="userSpaceOnUse" width="55" height="55"><circle cx="42" cy="27" r="4" fill="white"/><circle cx="37.60660171779821" cy="37.60660171779821" r="4" fill="white"/><circle cx="27" cy="42" r="4" fill="white"/><circle cx="16.393398282201787" cy="37.60660171779821" r="4" fill="white"/><circle cx="12" cy="27.000000000000004" r="4" fill="white"/><circle cx="16.393398282201787" cy="16.393398282201787" r="4" fill="white"/><circle cx="26.999999999999996" cy="12" r="4" fill="white"/><circle cx="37.60660171779821" cy="16.393398282201787" r="4" fill="white"/></pattern></defs></svg>
   <div id="particles" aria-hidden="true"></div>
   <aside class="settings" aria-label="Game settings">
     <button class="setting" id="volume" type="button" aria-label="Volume: 50%"><span class="setting-icon" aria-hidden="true"></span><span>Volume</span></button>
@@ -15,14 +20,21 @@
     <button class="setting" id="reduced" type="button" aria-pressed="false"><span class="setting-icon" aria-hidden="true"></span><span>Reduced Motion Mode</span></button>
     <button class="setting" id="colorblind" type="button" aria-pressed="false"><span class="setting-icon" aria-hidden="true"></span><span>Colorblind Mode</span></button>
     <button class="setting" id="dark" type="button" aria-pressed="false"><span class="setting-icon" aria-hidden="true"></span><span>Dark Mode</span></button>
+    <button class="setting" id="back" hidden><span class="setting-icon"></span>Main Menu</button>
   </aside>
   <div id="mode-notice" role="status" aria-live="polite" hidden></div>
   <main>
-    <h1>Mega Toss</h1>
-    <div class="stage"><div id="capsule" role="img" aria-label="Red and blue megavitamin"></div></div>
-    <button id="toss" type="button">Toss</button>
+    <h1>Mega Toss Main Menu</h1>
+    <section id="menu"><div class="choices"></div><button id="legend">Preview color symbols</button><footer>Vibe-Coded by Redeem_Honor</footer></section>
+    <section id="setup" hidden><h2>How many players?</h2><div class="counts"></div></section>
+    <section id="players" hidden></section>
+    <div class="stage" hidden><div id="capsule" role="img" aria-label="Red and blue megavitamin"></div></div>
+    <button hidden id="toss" type="button">Toss</button>
+    <aside id="scores" hidden></aside><aside id="collection" hidden></aside>
   </main>
-  <script type="module" src="./src/main.js?v=outline-24"></script>
+  <dialog id="symbols"><h2>Color symbols</h2><div class="samples"></div><form method="dialog"><button>Close</button></form></dialog>
+  <dialog id="reset"><h2>Reset Gacha stats?</h2><p>Your collection and streaks will be erased. This cannot be undone.</p><form method="dialog"><button value="cancel" autofocus>Cancel</button> <button value="reset">Reset stats</button></form></dialog>
+  <script type="module" src="./src/main.js?v=modes26"></script>
 </body>
 </html>
 

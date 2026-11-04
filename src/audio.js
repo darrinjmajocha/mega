@@ -1,4 +1,4 @@
-const names = ['thrown', 'woosh', 'hit', 'hit_g', 'hit_gg'];
+const names = ['thrown', 'woosh', 'hit', 'hit_g', 'hit_gg', 'miss', ...Array.from({length:7}, (_,i) => 'hit'+(i+2))];
 export function audioCandidates(name, base = import.meta.url) {
   const files = name === 'thrown' ? ['thrown', 'throw'] : [name];
   return ['../audio/', '../public/audio/'].flatMap(dir => files.map(file => new URL(`${dir}${file}.mp3${file === 'hit_gg' ? '?v=rain-21' : ''}`, base)));

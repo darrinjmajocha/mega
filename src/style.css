@@ -65,3 +65,43 @@ button:disabled { cursor: default; opacity: .45; }
 .dark button:focus-visible { outline-color: #8db8ff; }
 
 .dark #capsule path[stroke], .dark .matryoshka-shell path[stroke] { stroke: #fff; }
+
+[hidden]{display:none!important}
+.symbol{display:none;opacity:.55;pointer-events:none}
+.colorblind .patterned .symbol,#symbols .symbol{display:block}
+.dark .player-mega path[stroke]{stroke:white}
+.choices,.counts,.samples,.actions{display:flex;justify-content:center;gap:clamp(10px,3vw,32px);flex-wrap:wrap}
+#menu,#setup,#players,#collection,#scores,dialog{text-align:center}
+.choices button{display:grid;justify-items:center;align-content:start;gap:16px;width:clamp(110px,16vw,200px);background:transparent;color:inherit;border:0;border-radius:16px;padding:14px;font-size:clamp(16px,2vw,24px);line-height:1.15}
+.choices button:hover:enabled{background:#80808024}
+.choices svg{width:clamp(45px,7vw,95px)}
+#menu footer{position:fixed;bottom:12px;right:16px;font-size:13px}
+#legend,#scores button,#collection button,dialog button,.counts button{font-size:15px;padding:9px 14px}
+#legend{margin-top:22px}
+dialog{background:var(--page-background);color:inherit;border:2px solid;border-radius:16px;max-width:90vw}
+dialog::backdrop{background:#0008}
+.samples{margin:20px}.samples svg{width:40px;margin:0 auto 8px}
+#players{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:560px;width:100%}
+#players article{font-weight:bold;font-size:20px}
+.player-stage{position:relative;display:grid;place-items:center;min-height:clamp(95px,19vh,180px)}
+.player-mega,.player-stage .matryoshka-shell{width:clamp(42px,8vh,78px)}
+.player-mega{position:relative;z-index:2}
+.burst{position:absolute;width:14px;left:50%;top:50%;pointer-events:none}
+#scores,#collection{border:1px solid #8887;border-radius:16px;padding:16px}
+#scores>div{display:flex;gap:12px;align-items:center;justify-content:center;margin:8px}
+#scores output{min-width:2ch}
+.inventory svg{width:42px;margin:auto}
+.matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.matrix>div{border:1px solid #8886;border-radius:8px;padding:6px;font-weight:bold}
+.matrix svg{width:22px;margin:0 auto 3px}
+.actions{gap:5px;margin-top:12px}
+#collection h2,#scores h2{margin:0 0 8px}
+@media(min-width:1060px){
+body:is([data-screen="gacha"],[data-screen="local"]) main{margin-left:210px;padding-right:clamp(300px,30vw,440px)}
+#collection,#scores{position:absolute;right:12px;width:clamp(265px,27vw,410px);top:50%;transform:translateY(-50%)}
+}
+@media(max-width:1059px){
+.settings{position:relative;inset:auto;display:flex;flex-wrap:wrap;margin:8px;justify-content:center}
+.settings .setting{min-height:38px;padding:4px 7px;font-size:13px}.settings .setting-icon{width:24px;height:30px}.settings svg{width:13px}
+main{min-height:70svh;text-align:center}#menu footer{position:static;margin-top:28px;text-align:right}
+}
