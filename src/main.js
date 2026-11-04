@@ -6,7 +6,7 @@ import { animateToss } from './animation.js?v=midpoint-22';
 import { AudioManager } from './audio.js?v=modes26';
 import { celebrate } from './particles.js?v=modes26';
 import { animateExtendedSuspense } from './suspense-extras.js?v=freeze-20';
-import { Settings, MODE_LABELS } from './settings.js?v=colorblind-15';
+import { Settings, MODE_LABELS } from './settings.js?v=volume-quarters30';
 import { animateReduced, animateSuspense } from './modes.js?v=reduced-sequence29';
 
 const holder = document.querySelector('#capsule');
@@ -23,6 +23,8 @@ const icons = Object.fromEntries(Object.entries(controls).map(([id, control]) =>
   return [id, icon];
 }));
 const notice = document.querySelector('#mode-notice');
+icons.volume.insertAdjacentHTML('afterbegin', '<defs><linearGradient id="volume-top"><stop offset="50%"/><stop offset="50%"/></linearGradient><linearGradient id="volume-bottom"><stop offset="50%"/><stop offset="50%"/></linearGradient></defs>');
+icons.volume.insertAdjacentHTML('beforeend', '<path d="M100 4V396" fill="none" stroke="#000" stroke-width="8"/>');
 let noticeTimer, jitterTimer;
 function fillIcon(icon, top, bottom) {
   icon.classList.remove('patterned');
@@ -41,9 +43,15 @@ function updateSettings() {
   icons.colorblind.classList.toggle('show-letters', settings.colorblind);
   paintCapsule(icons.colorblind, settings.colorblind ? ['green', 'red'] : ['red', 'green']);
   const empty = 'var(--page-background)';
-  fillIcon(icons.volume, settings.volumeIndex === 0 ? COLORS.red : empty,
-    settings.volumeIndex === 2 ? empty : darken(COLORS.red));
-  controls.volume.setAttribute('aria-label', 'Volume: ' + ['50%', '25%', 'muted'][settings.volumeIndex]);
+  const volumeQuarters = 4 - settings.volumeIndex;
+  for (const [half, firstQuarter, color] of [['top', 3, COLORS.red], ['bottom', 1, darken(COLORS.red)]]) {
+    const stops = icons.volume.querySelectorAll('#volume-' + half + ' stop');
+    stops.forEach((stop, index) => stop.setAttribute('stop-color', volumeQuarters >= firstQuarter + index ? color : empty));
+  }
+  fillIcon(icons.volume, 'url(#volume-top)', 'url(#volume-bottom)');
+  const volumeLabel = ['Full', 'Three quarters', 'Half', 'One quarter', 'Muted'][settings.volumeIndex];
+  controls.volume.setAttribute('aria-label', 'Volume: ' + volumeLabel);
+  controls.volume.title = 'Volume: ' + volumeLabel;
   fillIcon(icons.suspense, settings.mode === 'suspense' ? '#9b51e0' : COLORS.blue,
     darken(settings.mode === 'suspense' ? '#f28c28' : COLORS.blue));
   fillIcon(icons.reduced, COLORS.yellow, darken(COLORS.yellow));

@@ -1,4 +1,4 @@
-export const VOLUMES = [0.5, 0.25, 0];
+export const VOLUMES = [0.5, 0.375, 0.25, 0.125, 0];
 export const MODE_LABELS = { suspense: 'Suspense Mode', reduced: 'Reduced Motion Mode' };
 export class Settings {
   mode = 'normal';
@@ -24,4 +24,3 @@ export class Settings {
     return { changed: true };
   }
 }
-

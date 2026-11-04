@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Settings } from '../src/settings.js';
-test('volume cycles full, half, muted, full', () => {
+test('volume cycles through quarters of the native maximum and returns to full', () => {
   const s = new Settings();
   assert.equal(s.volume, .5);
-  for (const expected of [.25, 0, .5]) { s.cycleVolume(); assert.equal(s.volume, expected); }
+  for (const expected of [.375, .25, .125, 0, .5]) { s.cycleVolume(); assert.equal(s.volume, expected); }
 });
 test('modes toggle individually and reject the other active mode in both directions', () => {
   const s = new Settings();
