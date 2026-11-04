@@ -186,10 +186,11 @@ button.addEventListener('click',async event=>{
         const slot=slots.splice(Math.floor(Math.random()*slots.length),1)[0];
         const duration=5000+(slot+Math.random())*5000/players.length;
         const pair=forced||randomPair();
-        greens=Math.max(greens,pair.filter(c=>c==='green').length);
+        const playerGreens=pair.filter(c=>c==='green').length;
+        greens=Math.max(greens,playerGreens);
         await spin(player,pair,duration);remaining--;
         audio.play(remaining===0 && greens?['hit','hit_g','hit_gg'][greens]:'hit');
-        if(!remaining && greens)burst(player);
+        if(playerGreens)burst(player);
       }));
     }else{
       const pair=forced||randomPair();
