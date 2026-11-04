@@ -1,10 +1,10 @@
-import { collection } from './gacha.js?v=streak27';
+import { collection } from './gacha.js?v=matching-tint32';
 import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=surprises-18';
 import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
-import { createCapsule, paintCapsule } from './capsule.js?v=modes26';
+import { createCapsule, paintCapsule } from './capsule.js?v=matching-tint32';
 import { animateToss } from './animation.js?v=midpoint-22';
 import { AudioManager } from './audio.js?v=modes26';
-import { celebrate } from './particles.js?v=modes26';
+import { celebrate } from './particles.js?v=matching-tint32';
 import { animateExtendedSuspense } from './suspense-extras.js?v=freeze-20';
 import { Settings, MODE_LABELS } from './settings.js?v=volume-quarters30';
 import { animateReduced, animateSuspense } from './modes.js?v=reduced-sequence29';
@@ -44,7 +44,7 @@ function updateSettings() {
   paintCapsule(icons.colorblind, settings.colorblind ? ['green', 'red'] : ['red', 'green']);
   const empty = 'var(--page-background)';
   const volumeQuarters = 4 - settings.volumeIndex;
-  for (const [half, firstQuarter, color] of [['top', 3, COLORS.red], ['bottom', 1, darken(COLORS.red)]]) {
+  for (const [half, firstQuarter, color] of [['top', 3, COLORS.red], ['bottom', 1, volumeQuarters > 2 ? darken(COLORS.red) : COLORS.red]]) {
     const stops = icons.volume.querySelectorAll('#volume-' + half + ' stop');
     stops.forEach((stop, index) => stop.setAttribute('stop-color', volumeQuarters >= firstQuarter + index ? color : empty));
   }
@@ -53,7 +53,7 @@ function updateSettings() {
   controls.volume.setAttribute('aria-label', 'Volume: ' + volumeLabel);
   controls.volume.title = 'Volume: ' + volumeLabel;
   fillIcon(icons.suspense, settings.mode === 'suspense' ? '#9b51e0' : COLORS.blue,
-    darken(settings.mode === 'suspense' ? '#f28c28' : COLORS.blue));
+    settings.mode === 'suspense' ? '#f28c28' : darken(COLORS.blue));
   fillIcon(icons.reduced, COLORS.yellow, darken(COLORS.yellow));
   controls.suspense.setAttribute('aria-pressed', String(settings.mode === 'suspense'));
   controls.reduced.setAttribute('aria-pressed', String(settings.mode === 'reduced'));

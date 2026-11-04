@@ -1,5 +1,5 @@
 import { randomPair } from './colors.js?v=rain-16';
-import { createCapsule, paintCapsule } from './capsule.js?v=modes26';
+import { createCapsule, paintCapsule } from './capsule.js?v=matching-tint32';
 export function celebrate(container, count, { now = () => performance.now(), request = requestAnimationFrame } = {}) {
   if (!count) return;
   const dramatic = count === 100;
@@ -48,4 +48,3 @@ export function celebrate(container, count, { now = () => performance.now(), req
   }
   request(tick);
 }
-

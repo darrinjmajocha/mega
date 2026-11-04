@@ -20,5 +20,5 @@ export function paintCapsule(svg, [top, bottom]) {
   svg.querySelector('[data-symbol-top]').setAttribute('fill','url(#symbol-'+top+')');
   svg.querySelector('[data-symbol-bottom]').setAttribute('fill','url(#symbol-'+bottom+')');
   svg.querySelector('[data-top]').setAttribute('fill', COLORS[top]);
-  svg.querySelector('[data-bottom]').setAttribute('fill', darken(COLORS[bottom]));
+  svg.querySelector('[data-bottom]').setAttribute('fill', top === bottom ? darken(COLORS[bottom]) : COLORS[bottom]);
 }

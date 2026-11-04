@@ -1,3 +1,4 @@
+import { COLORS, darken } from './colors.js?v=rain-16';
 const colors = ['red','blue','yellow','green'];
 const key = 'mega-toss.collection.v1';
 const empty = () => ({counts:Array(16).fill(0), last:-1, run:0, best:0, bestPair:-1});
@@ -54,10 +55,10 @@ export function collection(panel, icon) {
     const c=document.createElement('canvas');c.width=880;c.height=620;
     const g=c.getContext('2d');g.fillStyle='#f5f3ed';g.fillRect(0,0,880,620);g.fillStyle='#151515';g.font='bold 36px Arial';g.fillText('Mega Gacha · My collection',30,55);
     g.font='22px Arial';g.fillText('Highest streak · '+(stats.best?stats.best+' × '+label(stats.bestPair):'—'),30,98);
-    const palette=['#ee4145','#3478ed','#f9d342','#36c46b'];
+    const palette=colors.map(color => COLORS[color]);
     stats.counts.forEach((n,i)=>{const x=30+(i%4)*210,y=140+(i>>2)*115;
       g.fillStyle='#151515';g.fillRect(x,y,184,92);g.fillStyle='#fff';g.fillRect(x+2,y+2,180,88);
-      g.fillStyle=palette[i>>2];g.fillRect(x+10,y+12,18,30);g.fillStyle=palette[i%4];g.fillRect(x+10,y+42,18,30);
+      g.fillStyle=palette[i>>2];g.fillRect(x+10,y+12,18,30);g.fillStyle=(i>>2)===i%4?darken(palette[i%4]):palette[i%4];g.fillRect(x+10,y+42,18,30);
       g.fillStyle='#111';g.font='17px Arial';g.fillText(label(i),x+38,y+34);g.font='bold 25px Arial';g.fillText(String(n),x+38,y+66);});
     const a=document.createElement('a');a.download='mega-gacha.png';a.href=c.toDataURL();a.click();
   }
