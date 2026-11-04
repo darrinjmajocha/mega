@@ -105,3 +105,17 @@ body:is([data-screen="gacha"],[data-screen="local"]) main{margin-left:210px;padd
 .settings .setting{min-height:38px;padding:4px 7px;font-size:13px}.settings .setting-icon{width:24px;height:30px}.settings svg{width:13px}
 main{min-height:70svh;text-align:center}#menu footer{position:static;margin-top:28px;text-align:right}
 }
+
+#players article:nth-child(1){--player-ink:#eb1925}
+#players article:nth-child(2){--player-ink:#454ac9}
+#players article:nth-child(3){--player-ink:#ffdf00}
+#players article:nth-child(4){--player-ink:#10cc48}
+.player-label{color:var(--player-ink);font-size:1.4em;font-weight:900;paint-order:stroke fill;-webkit-text-stroke:2px #252525}
+.dark .player-label{-webkit-text-stroke:1px #eee}
+#streaks{display:none}
+body[data-screen="gacha"] #streaks{display:flex;gap:clamp(16px,4vw,40px);align-items:center;justify-content:center;text-align:center}
+#streaks small{font-weight:700}
+.streak-value{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;font-size:26px;font-weight:800}
+#current-run{font-size:clamp(32px,5vw,50px)}
+.streak-value svg{width:20px;flex:none}
+.dark .streak-value path[stroke]{stroke:white}

@@ -1,4 +1,4 @@
-import { collection } from './gacha.js?v=modes26';
+import { collection } from './gacha.js?v=streak27';
 import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=surprises-18';
 import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
 import { createCapsule, paintCapsule } from './capsule.js?v=modes26';
@@ -139,7 +139,7 @@ function setupPlayers(n){
   players=[];$('#players').replaceChildren();$('#scores').innerHTML='<h2>Scoreboard</h2>';
   for(let i=0;i<n;i++){
     const name='P'+(i+1), card=document.createElement('article'), stage=document.createElement('div'), mega=document.createElement('div');
-    stage.className='player-stage';mega.className='player-mega';mega.append(icon(['red','blue']));stage.append(mega);card.append(stage,name);$('#players').append(card);
+    stage.className='player-stage';mega.className='player-mega';mega.append(icon(['red','blue']));stage.append(mega);const label=document.createElement('span');label.className='player-label';label.textContent=name;card.append(stage,label);$('#players').append(card);
     const row=document.createElement('div'),score=document.createElement('output');score.value='0';row.append(name);$('#scores').append(row);
     action(row,'−',()=>score.value=Number(score.value)-1).setAttribute('aria-label','Subtract one from '+name);
     row.append(score);action(row,'+',()=>score.value=Number(score.value)+1).setAttribute('aria-label','Add one to '+name);

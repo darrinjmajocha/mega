@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f3ed">
   <title>Mega Toss</title>
-  <link rel="stylesheet" href="./src/style.css?v=modes26">
+  <link rel="stylesheet" href="./src/style.css?v=streak27">
 </head>
 <body data-screen="menu">
 <svg width="0" height="0" style="position:absolute;width:0;height:0" aria-hidden="true"><defs>
@@ -29,12 +29,16 @@
     <section id="setup" hidden><h2>How many players?</h2><div class="counts"></div></section>
     <section id="players" hidden></section>
     <div class="stage" hidden><div id="capsule" role="img" aria-label="Red and blue megavitamin"></div></div>
+    <section id="streaks" aria-label="Mega Gacha streaks" aria-live="polite">
+      <div><small>Current streak</small><div class="streak-value" id="current-run"></div></div>
+      <div><small>Best streak</small><div class="streak-value" id="best-run"></div></div>
+    </section>
     <button hidden id="toss" type="button">Toss</button>
     <aside id="scores" hidden></aside><aside id="collection" hidden></aside>
   </main>
   <dialog id="symbols"><h2>Color symbols</h2><div class="samples"></div><form method="dialog"><button>Close</button></form></dialog>
   <dialog id="reset"><h2>Reset Gacha stats?</h2><p>Your collection and streaks will be erased. This cannot be undone.</p><form method="dialog"><button value="cancel" autofocus>Cancel</button> <button value="reset">Reset stats</button></form></dialog>
-  <script type="module" src="./src/main.js?v=modes26"></script>
+  <script type="module" src="./src/main.js?v=streak27"></script>
 </body>
 </html>
 

@@ -22,8 +22,14 @@ export function collection(panel, icon) {
   } catch {}
   function save(){try { localStorage.setItem(key,JSON.stringify(stats)); saved=true; } catch { saved=false; }}
   function draw(){
-    panel.innerHTML='<h2>My collection</h2><p class="streak"></p><div class="inventory"></div><div class="actions"></div>';
-    panel.querySelector('.streak').textContent='Current streak · '+(stats.run>=2?stats.run+' × '+label(stats.last):'—')+'  |  Best · '+(stats.best?stats.best+' × '+label(stats.bestPair):'—');
+    panel.innerHTML='<h2>My collection</h2><div class="inventory"></div><div class="actions"></div>';
+    for (const [id, length, pair] of [['current-run',stats.run,stats.last],['best-run',stats.best,stats.bestPair]]) {
+      const value=document.getElementById(id);
+      value.replaceChildren();
+      if(length<2){value.textContent='—';value.setAttribute('aria-label','No streak yet');continue;}
+      value.append(icon([colors[pair>>2],colors[pair%4]]), '× '+length);
+      value.setAttribute('aria-label',label(pair)+', '+length+' in a row');
+    }
     const inventory=panel.querySelector('.inventory');
     function button(parent,name,action){const b=document.createElement('button'); b.textContent=name; b.onclick=action;parent.append(b);}
     if(compact){
