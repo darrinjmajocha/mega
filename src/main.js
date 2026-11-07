@@ -167,9 +167,9 @@ function showGuess(seat, side) {
 }
 async function restoreLast(seat) {
   const svg = seat.mega.querySelector('svg');
-  await svg.animate([{opacity:1},{opacity:0}],{duration:100,fill:'forwards'}).finished.then(animation => animation.cancel());
+  await svg.animate([{opacity:1},{opacity:0}],{duration:250,fill:'forwards'}).finished.then(animation => animation.cancel());
   paintCapsule(svg,seat.last);
-  await svg.animate([{opacity:0},{opacity:1}],{duration:100}).finished;
+  await svg.animate([{opacity:0},{opacity:1}],{duration:250}).finished;
 }
 const titles={menu:'Mega Toss Main Menu', setup:'Local Multiplayer Mode', local:'Local Multiplayer Mode', free:'Free Play', gacha:'Mega Gacha'};
 function navigate(next){
@@ -333,21 +333,28 @@ function spin(holder,finalPair,duration,revealDelay=0){
     frame: angle => { holder.style.transform = 'rotate(' + angle + 'deg)'; },
     tease: () => paintCapsule(svg, teasePair(finalPair)),
     fly: async delay => {
-      const svg = holder.querySelector('svg');
-      const travel = innerWidth + holder.getBoundingClientRect().width;
+      holder.style.transform = 'rotate(0deg)';
+      const bounds = svg.getBoundingClientRect();
+      const travel = innerWidth - bounds.left + bounds.height + 32;
       const arc = Math.min(innerHeight * .25, 180);
-      const transform = (x,y,angle) => 'translate('+x+'px,'+y+'px) rotate('+angle+'deg)';
-      const flight = svg.animate([
-        {transform:transform(0,0,0)}, {offset:.35,transform:transform(18,-8,35)},
-        {transform:transform(travel,-arc,110)}
-      ],{duration:1200,easing:'ease-in',fill:'forwards'});
+      // Ease the flight path independently of the five revolutions per second.
+      function flightFrames(returning, turns) {
+        return Array.from({length: 31}, (_, i) => {
+          const p = i / 30;
+          const distance = returning ? (1-p)**3 : p**2;
+          const curve = returning ? Math.sin(Math.PI*p) : 0;
+          const x = travel*distance - 32*curve;
+          const y = -arc*(distance + .5*curve);
+          return {transform: 'translate('+x+'px,'+y+'px) rotate('+(360*turns*p)+'deg)'};
+        });
+      }
+      const flight = svg.animate(flightFrames(false,6),{duration:1200,fill:'forwards'});
       await flight.finished;
+      svg.style.visibility = 'hidden';
       paintCapsule(svg,finalPair);
       await new Promise(done => setTimeout(done,delay));
-      const returning = svg.animate([
-        {transform:transform(travel,-arc,110)}, {offset:.67,transform:transform(-32,-arc/2,315)},
-        {transform:transform(0,0,360)}
-      ],{duration:1000,easing:'ease-out',fill:'forwards'});
+      const returning = svg.animate(flightFrames(true,5),{duration:1000,fill:'forwards'});
+      svg.style.visibility = '';
       await returning.finished;
       flight.cancel(); returning.cancel();
     },
