@@ -1,10 +1,10 @@
-import { roundPoints, winners } from './call-it.js';
+import { roundPoints, winners, earlierClaims } from './call-it.js?v=claims35';
 import { collection } from './gacha.js?v=matching-tint32';
 import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=call-it33';
 import { randomPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
 import { createCapsule, paintCapsule } from './capsule.js?v=matching-tint32';
 import { animateToss } from './animation.js?v=midpoint-22';
-import { AudioManager } from './audio.js?v=modes26';
+import { AudioManager } from './audio.js?v=claims35';
 import { celebrate } from './particles.js?v=matching-tint32';
 import { animateExtendedSuspense } from './suspense-extras.js?v=call-it33';
 import { Settings, MODE_LABELS } from './settings.js?v=volume-quarters30';
@@ -144,27 +144,86 @@ $('#no-greens').onclick = () => {
   $('#no-greens .setting-icon').style.opacity = disableGreens ? '.45' : '1';
 };
 $('#local-mode').onchange = () => navigate('setup');
-function updateRound() {
+const center = $('#call-center');
+const selector = $('#central-mega');
+selector.append(icon(['red','blue']));
+let phase = 'between', queue = [], claimNumber = 0;
+
+function startGuesses() {
+  queue = seats.map(seat => ({seat, score:Number(seat.score.value), tie:Math.random()}))
+    .sort((a,b) => a.score-b.score || a.tie-b.tie).map(entry => entry.seat);
+  claimNumber = 0;
+  for (const seat of seats) {
+    seat.claim = Infinity;
+    seat.guess = [null,null];
+    seat.label.textContent = seat.name;
+  }
+  phase = 'picking';
+  updateRound();
+}
+function copyWarning(seat) {
+  if (!seat.guess.every(Boolean)) return '';
+  const earlier = earlierClaims(seats.map(s => s.guess), seats.map(s => s.claim), seats.indexOf(seat));
+  if (!earlier.length) return '';
+  const names = earlier.map(i => seats[i].name).join(' or ');
+  return ' If '+names+' hits this call and '+seat.name+' misses, '+seat.name+' gets −1 instead of the bonus.';
+}
+function updateRound(edited) {
   if (screen !== 'local' || !callIt()) return;
-  const ready = seats.every(seat => seat.guess.every(Boolean));
-  $('#round-status').textContent = victory.length ? victory.map(i => 'P'+(i+1)).join(' and ') + ' won! Start a new game to play again.' :
-    settings.busy ? 'Rolling…' : ready ? 'Guesses ready. Toss All to roll.' : 'Tap each half to choose its color. Tap again to cycle.';
-  button.disabled = settings.busy || !ready || victory.length > 0;
-  for (const seat of seats) for (const hit of seat.mega.querySelectorAll('.guess-half')) hit.hidden = settings.busy || victory.length > 0;
+  const active = !settings.busy && !victory.length;
+  const picking = phase === 'picking';
+  center.hidden = !active || phase === 'review';
+  selector.hidden = $('#caller').hidden = $('#lock-guess').hidden = !picking;
+  $('#start-guesses').hidden = phase !== 'between';
+  const status = $('#round-status');
+  if (victory.length) status.textContent = victory.map(i => seats[i].name).join(' and ')+' won! Start a new game to play again.';
+  else if (settings.busy) status.textContent = 'Rolling…';
+  else if (picking) {
+    const seat = queue[0];
+    $('#caller').textContent = seat.name+' · '+seat.guess.map(c => c || '?').join(' / ');
+    paintCapsule(selector.querySelector('svg'),seat.guess.map((c,i) => c || seat.last[i]));
+    $('#lock-guess').disabled = !seat.guess.every(Boolean);
+    status.textContent = seat.name+', tap each half to choose your call.'+copyWarning(seat);
+  } else if (phase === 'review') {
+    status.textContent = 'Calls locked. Tap a player’s mega to edit, or Toss All.'+(edited ? copyWarning(edited) : '');
+  } else status.textContent = 'Round complete.';
+  button.hidden = phase !== 'review' || !!victory.length;
+  button.disabled = !active || phase !== 'review';
+  for (const seat of seats) for (const hit of seat.buttons) hit.hidden = !active || phase !== 'review';
 }
 function checkScoreWinner() {
   victory = winners(seats.map(seat => Number(seat.score.value)),target);
   updateRound();
 }
-function showGuess(seat, side) {
+function cycleHalf(seat, side) {
   const colors = availableColors();
   seat.guess[side] = colors[(colors.indexOf(seat.guess[side])+1) % colors.length];
-  const preview = seat.guess.map((color,i) => color || seat.last[i]);
-  paintCapsule(seat.mega.querySelector('svg'), preview);
-  seat.buttons[side].setAttribute('aria-label',seat.name+' '+['top','bottom'][side]+' guess: '+seat.guess[side]);
-  seat.label.textContent = seat.name+' · '+seat.guess.map(c => c || '?').join(' / ');
-  updateRound();
 }
+function displayCall(seat) {
+  paintCapsule(seat.mega.querySelector('svg'),seat.guess);
+  seat.label.textContent = seat.name+' · '+seat.guess.join(' / ');
+  seat.buttons.forEach((hit,side) => hit.setAttribute('aria-label',seat.name+' '+['top','bottom'][side]+' guess: '+seat.guess[side]));
+}
+function showGuess(seat, side) {
+  cycleHalf(seat,side);
+  seat.claim = ++claimNumber;
+  displayCall(seat);
+  updateRound(seat);
+}
+for (const [side,half] of ['top','bottom'].entries()) {
+  const hit = action(selector,'',() => { cycleHalf(queue[0],side); updateRound(); });
+  hit.className = 'guess-half '+half;
+  hit.setAttribute('aria-label','Choose '+half+' color');
+}
+$('#start-guesses').onclick = startGuesses;
+$('#lock-guess').onclick = () => {
+  const seat = queue.shift();
+  seat.claim = ++claimNumber;
+  displayCall(seat);
+  audio.play('lockin');
+  if (!queue.length) phase = 'review';
+  updateRound();
+};
 async function restoreLast(seat) {
   const svg = seat.mega.querySelector('svg');
   await svg.animate([{opacity:1},{opacity:0}],{duration:250,fill:'forwards'}).finished.then(animation => animation.cancel());
@@ -238,6 +297,10 @@ function setupPlayers(n){
     action($('#scores'),'New game',()=>navigate('setup'));
   }
   else action($('#scores'),'Reset all scores',()=>$('#scores').querySelectorAll('output').forEach(o=>o.value='0'));
+  if (callIt()) {
+    $('#players').append(center);
+    startGuesses();
+  }
   updateSettings();
   navigate('local');
 }
@@ -293,7 +356,8 @@ button.addEventListener('click',async event=>{
         if(playerGreens)burst(player);
       }));
       if (callIt()) {
-        const points = roundPoints(seats.map(seat => seat.guess),rolls);
+        const points = roundPoints(seats.map(seat => seat.guess),rolls,seats.map(seat => seat.claim));
+        phase = 'between';
         seats.forEach((seat,i) => {
           seat.score.value = Number(seat.score.value) + points[i];
           seat.last = rolls[i];

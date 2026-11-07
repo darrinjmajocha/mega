@@ -1,11 +1,19 @@
-export function roundPoints(guesses, rolls) {
+const samePair = (a, b) => a[0] === b[0] && a[1] === b[1];
+
+export function earlierClaims(guesses, claims, player) {
+  return guesses.map((_, i) => i).filter(i => claims[i] < claims[player] && samePair(guesses[i], guesses[player]));
+}
+
+export function roundPoints(guesses, rolls, claims = []) {
   return guesses.map((guess, player) => {
     const roll = rolls[player];
     let points = roll.reduce((sum, color, side) => {
       if (color === 'green') return sum + (color === guess[side] ? 9 : 3);
       return sum + Number(color === guess[side]);
     }, 0);
-    if (rolls.some((other, index) => index !== player && other.every((color, side) => color === guess[side]))) points++;
+    const copiedHit = !samePair(roll, guess) && earlierClaims(guesses, claims, player).some(i => samePair(rolls[i], guess));
+    if (copiedHit) points--;
+    else if (rolls.some((other, i) => i !== player && samePair(other, guess))) points++;
     return points;
   });
 }

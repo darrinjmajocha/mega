@@ -93,6 +93,14 @@ dialog::backdrop{background:#0008}
 .guess-half:focus-visible{outline-offset:0}
 @media(max-width:1059px){#local-options{position:relative;display:block;top:auto;right:auto;text-align:right;margin:6px 14px}}
 body{overflow-x:clip}
+#players:has(#call-center:not([hidden])){grid-template-columns:minmax(0,1fr) minmax(92px,1fr) minmax(0,1fr);align-items:center}
+#players:has(#call-center:not([hidden])) article:nth-of-type(even){grid-column:3}
+#players:has(#call-center:not([hidden])) article:nth-of-type(odd){grid-column:1}
+#call-center{grid-column:2;grid-row:1 / span 2;display:grid;justify-items:center;align-content:center;gap:10px}
+#players:has(article:nth-of-type(2):last-of-type) #call-center{grid-row:1}
+#central-mega{width:clamp(38px,7vh,62px);margin:6px 0}
+.reduced-motion #central-mega{transform:rotate(-90deg)}
+#call-center>button{font-size:15px;padding:9px 12px}
 #players article{font-weight:bold;font-size:20px}
 .player-stage{position:relative;display:grid;place-items:center;min-height:clamp(95px,19vh,180px)}
 .player-mega,.player-stage .matryoshka-shell{width:clamp(42px,8vh,78px)}

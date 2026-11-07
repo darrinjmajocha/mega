@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f5f3ed">
   <title>Mega Toss</title>
-  <link rel="stylesheet" href="./src/style.css?v=call-it33">
+  <link rel="stylesheet" href="./src/style.css?v=claims35">
 </head>
 <body data-screen="menu">
 <svg width="0" height="0" style="position:absolute;width:0;height:0" aria-hidden="true"><defs>
@@ -28,9 +28,15 @@
   <main>
     <h1>Mega Toss Main Menu</h1>
     <section id="menu"><div class="choices"></div><button id="legend">Preview color symbols</button><footer>Vibe-Coded by Redeem_Honor</footer></section>
-    <section id="setup" hidden><h2>How many players?</h2><label id="limit-setting" hidden>Play to <input id="limit" type="number" value="15" min="1" step="1" required> points · win by 2</label><details id="call-rules" hidden><summary>How to play Call It</summary><p>Call both colors before tossing. Each matching side earns 1 point. Earn 1 more if another player rolls your exact pair.</p><p>A green side earns 3 points, or 9 if you called it. Double green wins the game.</p></details><div class="counts"></div></section>
+    <section id="setup" hidden><h2>How many players?</h2><label id="limit-setting" hidden>Play to <input id="limit" type="number" value="15" min="1" step="1" required> points · win by 2</label><details id="call-rules" hidden><summary>How to play Call It</summary><p>Call both colors before tossing. Each matching side earns 1 point. Earn 1 more if another player rolls your exact pair. Lowest score calls first. If you copy an earlier call, miss it, and that player rolls it, the bonus becomes −1. Editing a call gives it a new place in the claim order.</p><p>A green side earns 3 points, or 9 if you called it. Double green wins the game.</p></details><div class="counts"></div></section>
     <p id="round-status" role="status" hidden></p>
     <section id="players" hidden></section>
+    <div id="call-center" hidden>
+      <strong id="caller"></strong>
+      <div id="central-mega" class="player-mega"></div>
+      <button id="lock-guess">Lock In</button>
+      <button id="start-guesses">Start Locking In Guesses</button>
+    </div>
     <div class="stage" hidden><div id="capsule" role="img" aria-label="Red and blue megavitamin"></div></div>
     <section id="streaks" aria-label="Mega Gacha streaks" aria-live="polite">
       <div><small>Current streak</small><div class="streak-value" id="current-run"></div></div>
@@ -41,6 +47,6 @@
   </main>
   <dialog id="symbols"><h2>Color symbols</h2><div class="samples"></div><form method="dialog"><button>Close</button></form></dialog>
   <dialog id="reset"><h2>Reset Gacha stats?</h2><p>Your collection and streaks will be erased. This cannot be undone.</p><form method="dialog"><button value="cancel" autofocus>Cancel</button> <button value="reset">Reset stats</button></form></dialog>
-  <script type="module" src="./src/main.js?v=helicopter34"></script>
+  <script type="module" src="./src/main.js?v=claims35"></script>
 </body>
 </html>

@@ -18,3 +18,12 @@ test('win by two, or win immediately on double green including simultaneous winn
   assert.deepEqual(winners([15,2],15,[['red','red'],['green','green']]), [1]);
   assert.deepEqual(winners([2,4],15,[['green','green'],['green','green']]), [0,1]);
 });
+test('only the later claimant loses the cross-player bonus when an earlier claimant hits', () => {
+  const pair = ['blue','blue'];
+  const guesses = [pair,pair,pair];
+  const claims = [2,1,3];
+  assert.deepEqual(roundPoints(guesses,[['red','red'],pair,['blue','red']],claims),[-1,2,0]);
+  assert.deepEqual(roundPoints(guesses,[pair,pair,pair],claims),[3,3,3]);
+  assert.deepEqual(roundPoints(guesses,[pair,pair,['red','red']],claims),[3,3,-1]);
+  assert.deepEqual(roundPoints(guesses,[['red','red'],pair,['red','red']],[1,3,2]),[1,2,1]);
+});
