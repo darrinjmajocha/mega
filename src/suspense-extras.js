@@ -1,6 +1,6 @@
 import { animateZany } from './zany.js?v=surprises-18';
 import { afterPause } from './pauses.js?v=zany-13';
-import { animateSuspense, createSuspensePlan } from './modes.js?v=surprises-18';
+import { animateSuspense, createSuspensePlan } from './modes.js?v=call-it33';
 import { animateToss } from './animation.js?v=mid-woosh-7';
 export function betweenMovementPause(random = Math.random) {
   return (10 + Math.floor(random() * 91)) * 10;
@@ -28,6 +28,9 @@ export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan()
   if (plan.abruptAngle === undefined && Math.random() < .03) {
     plan = { ...plan, freezeAt: plan.acceleration + plan.cruise * (.2 + Math.random() * .6), freezeDuration: 300 + Math.random() * 1200 };
   }
+  // Reverse on a half-turn boundary so the reflected angle stays continuous.
+  const reverse = plan.abruptAngle === undefined && Math.random() < .025;
+  const reverseAt = 180 * Math.ceil((plan.velocity * plan.acceleration / 2 + plan.velocity * plan.cruise / 2) / 180);
   let revealed = false;
   const waitForEncore = callback => plan.fake === 'pause' ? callback() : afterPause(callback);
   const vary = plan.abruptAngle === undefined && Math.random() < .65;
@@ -44,7 +47,7 @@ export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan()
       const phase = (angle - startAngle) / distance;
       angle += amplitude * distance / (2 * Math.PI) * Math.sin(phase * 2 * Math.PI) ** 3;
     }
-    callbacks.frame(angle);
+    callbacks.frame(reverse && angle >= reverseAt ? 2 * reverseAt - angle : angle);
   }, land() {
     if (plan.fake === 'pause' || plan.abruptAngle !== undefined) { callbacks.land(); return; }
     const choice = Math.random();
@@ -80,4 +83,3 @@ export function animateExtendedSuspense(callbacks, { plan = createSuspensePlan()
     else callbacks.land();
   } });
 }
-

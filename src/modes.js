@@ -30,7 +30,7 @@ export function createSuspensePlan(random = Math.random) {
   const cruise = (turns * 360 - velocity * (acceleration + deceleration) / 2) / velocity;
   const stop = acceleration + cruise + deceleration;
   const choice = random();
-  const fake = choice < .45 ? 'none' : choice < .6 ? 'pause' : choice < .8 ? 'colors' : 'spin';
+  const fake = choice < .45 ? 'none' : choice < .65 ? 'pause' : choice < .8 ? 'colors' : 'spin';
   const pause = fake === 'none' ? 0 : randomPause(random);
   const encore = (fake === 'none' || fake === 'pause') ? 0 : fake === 'spin' ? 300 : 500;
   const plan = { rpm, velocity, acceleration, deceleration, cruise, turns, stop, fake, pause, encore, duration: stop + pause + encore };

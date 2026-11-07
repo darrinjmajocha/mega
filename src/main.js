@@ -1,13 +1,14 @@
+import { roundPoints, winners } from './call-it.js';
 import { collection } from './gacha.js?v=matching-tint32';
-import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=surprises-18';
-import { randomPair, spinningPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
+import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=call-it33';
+import { randomPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
 import { createCapsule, paintCapsule } from './capsule.js?v=matching-tint32';
 import { animateToss } from './animation.js?v=midpoint-22';
 import { AudioManager } from './audio.js?v=modes26';
 import { celebrate } from './particles.js?v=matching-tint32';
-import { animateExtendedSuspense } from './suspense-extras.js?v=freeze-20';
+import { animateExtendedSuspense } from './suspense-extras.js?v=call-it33';
 import { Settings, MODE_LABELS } from './settings.js?v=volume-quarters30';
-import { animateReduced, animateSuspense } from './modes.js?v=reduced-sequence29';
+import { animateReduced, animateSuspense } from './modes.js?v=call-it33';
 
 const holder = document.querySelector('#capsule');
 const button = document.querySelector('#toss');
@@ -65,7 +66,10 @@ function updateSettings() {
 function lock(busy) {
   settings.busy = busy;
   button.disabled = busy;
-  for (const control of document.querySelectorAll('button')) control.disabled = busy;
+  for (const control of document.querySelectorAll('button, #local-mode, #limit')) control.disabled = busy;
+  if (screen === 'local' && callIt()) {
+    for (const control of document.querySelectorAll('#scores > div button')) control.disabled = false;
+  }
 }
 function clearNotice() {
   clearTimeout(noticeTimer);
@@ -125,12 +129,69 @@ const $ = selector => document.querySelector(selector);
 const icon = pair => {const node=createCapsule();paintCapsule(node,pair);return node;};
 const book=collection($('#collection'),icon);
 let screen='menu', players=[];
+let instantWin = false, disableGreens = false, seats = [], victory = [], target = 15;
+const callIt = () => $('#local-mode').value === 'call';
+const availableColors = () => disableGreens && screen !== 'gacha' ? ['red','blue','yellow'] : ['red','blue','yellow','green'];
+function rollPair() {
+  const colors = availableColors();
+  if (colors.length === 4) return randomPair();
+  return Array.from({length: 2}, () => colors[Math.floor(Math.random() * 3)]);
+}
+$('#no-greens .setting-icon').append(icon(['green','green']));
+$('#no-greens').onclick = () => {
+  disableGreens = !disableGreens;
+  $('#no-greens').setAttribute('aria-pressed', String(disableGreens));
+  $('#no-greens .setting-icon').style.opacity = disableGreens ? '.45' : '1';
+};
+$('#local-mode').onchange = () => navigate('setup');
+function updateRound() {
+  if (screen !== 'local' || !callIt()) return;
+  const ready = seats.every(seat => seat.guess.every(Boolean));
+  $('#round-status').textContent = victory.length ? victory.map(i => 'P'+(i+1)).join(' and ') + ' won! Start a new game to play again.' :
+    settings.busy ? 'Rolling…' : ready ? 'Guesses ready. Toss All to roll.' : 'Tap each half to choose its color. Tap again to cycle.';
+  button.disabled = settings.busy || !ready || victory.length > 0;
+  for (const seat of seats) for (const hit of seat.mega.querySelectorAll('.guess-half')) hit.hidden = settings.busy || victory.length > 0;
+}
+function checkScoreWinner() {
+  victory = winners(seats.map(seat => Number(seat.score.value)),target);
+  updateRound();
+}
+function showGuess(seat, side) {
+  const colors = availableColors();
+  seat.guess[side] = colors[(colors.indexOf(seat.guess[side])+1) % colors.length];
+  const preview = seat.guess.map((color,i) => color || seat.last[i]);
+  paintCapsule(seat.mega.querySelector('svg'), preview);
+  seat.buttons[side].setAttribute('aria-label',seat.name+' '+['top','bottom'][side]+' guess: '+seat.guess[side]);
+  seat.label.textContent = seat.name+' · '+seat.guess.map(c => c || '?').join(' / ');
+  updateRound();
+}
+async function restoreLast(seat) {
+  const svg = seat.mega.querySelector('svg');
+  await svg.animate([{opacity:1},{opacity:0}],{duration:100,fill:'forwards'}).finished.then(animation => animation.cancel());
+  paintCapsule(svg,seat.last);
+  await svg.animate([{opacity:0},{opacity:1}],{duration:100}).finished;
+}
 const titles={menu:'Mega Toss Main Menu', setup:'Local Multiplayer Mode', local:'Local Multiplayer Mode', free:'Free Play', gacha:'Mega Gacha'};
 function navigate(next){
+  if (next === 'menu') $('#local-mode').value = 'standard';
+  $('#local-options').hidden = next !== 'local' && next !== 'setup';
+  $('#no-greens').hidden = next !== 'menu';
+  $('#limit-setting').hidden = !callIt();
+  $('#call-rules').hidden = !callIt();
+  $('#round-status').hidden = next !== 'local' || !callIt();
+  button.disabled = false;
   screen=next; document.body.dataset.screen=next; $('h1').textContent=titles[next];
   for(const [selector,visible] of Object.entries({'#menu':next==='menu','#setup':next==='setup','#players':next==='local','#scores':next==='local','#collection':next==='gacha','.stage':next==='free'||next==='gacha','#back':next!=='menu','#toss':['local','free','gacha'].includes(next),'#suspense':next!=='menu','#reduced':next!=='menu'})) $(selector).hidden=!visible;
   button.textContent=next==='local'?'Toss All':'Toss';
-  clearNotice(); if(next==='gacha')book.draw();
+  clearNotice(); if(next==='gacha') {
+    book.draw();
+    if (disableGreens) {
+      notice.textContent = 'Greens are always enabled in Mega Gacha.';
+      notice.hidden = false;
+      noticeTimer = setTimeout(clearNotice,2200);
+    }
+  }
+  updateRound();
 }
 function action(parent,title,fn,mega){
   const b=document.createElement('button');b.type='button';if(mega)b.append(icon(mega));b.append(title);b.onclick=fn;parent.append(b);return b;
@@ -146,16 +207,37 @@ for(const [color,symbol] of Object.entries({red:'Dots',blue:'Diagonal lines',yel
 }
 for(const n of [2,3,4]) action($('.counts'),String(n),()=>setupPlayers(n));
 function setupPlayers(n){
+  if (callIt() && !$('#limit').reportValidity()) return;
+  target = Number($('#limit').value);
+  seats=[]; victory=[]; instantWin=false;
   players=[];$('#players').replaceChildren();$('#scores').innerHTML='<h2>Scoreboard</h2>';
   for(let i=0;i<n;i++){
     const name='P'+(i+1), card=document.createElement('article'), stage=document.createElement('div'), mega=document.createElement('div');
     stage.className='player-stage';mega.className='player-mega';mega.append(icon(['red','blue']));stage.append(mega);const label=document.createElement('span');label.className='player-label';label.textContent=name;card.append(stage,label);$('#players').append(card);
     const row=document.createElement('div'),score=document.createElement('output');score.value='0';row.append(name);$('#scores').append(row);
-    action(row,'−',()=>score.value=Number(score.value)-1).setAttribute('aria-label','Subtract one from '+name);
-    row.append(score);action(row,'+',()=>score.value=Number(score.value)+1).setAttribute('aria-label','Add one to '+name);
+    const seat = {name, mega, label, score, guess:[null,null], last:['red','blue'], buttons:[]};
+    seats.push(seat);
+    if (callIt()) {
+      for (const [side,half] of ['top','bottom'].entries()) {
+        const hit = action(mega,'',()=>showGuess(seat,side));
+        hit.className='guess-half '+half;
+        hit.setAttribute('aria-label',name+' '+half+' guess');
+        seat.buttons.push(hit);
+      }
+    }
+    function adjust(delta) {
+      score.value=Number(score.value)+delta;
+      if (callIt() && !settings.busy && !instantWin) checkScoreWinner();
+    }
+    action(row,'−',()=>adjust(-1)).setAttribute('aria-label','Subtract one from '+name);
+    row.append(score);action(row,'+',()=>adjust(1)).setAttribute('aria-label','Add one to '+name);
     players.push(mega);
   }
-  action($('#scores'),'Reset all scores',()=>$('#scores').querySelectorAll('output').forEach(o=>o.value='0'));
+  if (callIt()) {
+    $('#scores h2').textContent = 'Play to '+target+' · win by 2';
+    action($('#scores'),'New game',()=>navigate('setup'));
+  }
+  else action($('#scores'),'Reset all scores',()=>$('#scores').querySelectorAll('output').forEach(o=>o.value='0'));
   updateSettings();
   navigate('local');
 }
@@ -176,7 +258,7 @@ function multiplayerSpin(cb,duration){
 function burst(origin){
   const root=origin.parentElement;
   for(let i=0;i<30;i++){
-    const mini=icon(randomPair());mini.classList.add('burst');root.prepend(mini);
+    const mini=icon(rollPair());mini.classList.add('burst');root.prepend(mini);
     const angle=Math.random()*2*Math.PI, distance=55+Math.random()*95;
     const animation=mini.animate([{transform:'translate(-50%,-50%) scale(.4)'},{transform:'translate(calc(-50% + '+Math.cos(angle)*distance+'px), calc(-50% + '+Math.sin(angle)*distance+'px)) rotate(240deg)',opacity:0}],{duration:800,delay:i*75,fill:'both'});
     animation.onfinish=()=>mini.remove();
@@ -184,34 +266,54 @@ function burst(origin){
 }
 navigate('menu');
 button.addEventListener('click',async event=>{
-  if(settings.busy)return;
+  if(settings.busy || button.disabled)return;
   lock(true);clearNotice();
   try{
-    const forced=shortcutPair({alt:event.altKey||held.has('AltLeft')||held.has('AltRight'),g:held.has('KeyG'),h:held.has('KeyH')})||forcedPair;
+    const shortcut=shortcutPair({alt:event.altKey||held.has('AltLeft')||held.has('AltRight'),g:held.has('KeyG'),h:held.has('KeyH')})||forcedPair;
+    const forced = availableColors().includes('green') ? shortcut : null;
     forcedPair=null;
-    await audio.unlock();audio.play('thrown');
+    await audio.unlock();
+    if (screen==='local' && callIt()) {
+      updateRound();
+      await Promise.all(seats.map(restoreLast));
+    }
+    audio.play('thrown');
     if(screen==='local'){
       let remaining=players.length,greens=0;
       const slots=players.map((_,i)=>i);
-      await Promise.all(players.map(async player=>{
+      const rolls = players.map(() => forced || rollPair());
+      await Promise.all(players.map(async (player,index)=>{
         const slot=slots.splice(Math.floor(Math.random()*slots.length),1)[0];
         const duration=5000+(slot+Math.random())*5000/players.length;
-        const pair=forced||randomPair();
+        const pair=rolls[index];
         const playerGreens=pair.filter(c=>c==='green').length;
         greens=Math.max(greens,playerGreens);
         await spin(player,pair,duration,slot*1000);remaining--;
         audio.play(remaining===0 && greens?['hit','hit_g','hit_gg'][greens]:'hit');
         if(playerGreens)burst(player);
       }));
+      if (callIt()) {
+        const points = roundPoints(seats.map(seat => seat.guess),rolls);
+        seats.forEach((seat,i) => {
+          seat.score.value = Number(seat.score.value) + points[i];
+          seat.last = rolls[i];
+          seat.guess = [null,null];
+          seat.label.textContent = seat.name+' · +'+points[i];
+          seat.buttons.forEach((hit,side) => hit.setAttribute('aria-label',seat.name+' '+['top','bottom'][side]+' guess'));
+        });
+        victory = winners(seats.map(seat => Number(seat.score.value)),target,rolls);
+        instantWin = greens === 2;
+        if (instantWin) celebrate($('#particles'),100);
+      }
     }else{
-      const pair=forced||randomPair();
+      const pair=forced||rollPair();
       await spin(holder,pair);
       const effect=landingEffect(pair);
       const cue=screen==='gacha' && !forced ? book.land(pair) : null;
       audio.play(cue && audio.buffers.has(cue)?cue:effect.sound);
       celebrate($('#particles'),effect.count);
     }
-  }finally{lock(false);}
+  }finally{lock(false);updateRound();}
 });
 function spin(holder,finalPair,duration,revealDelay=0){
   const mode=settings.mode, svg=holder.querySelector('svg');
@@ -225,10 +327,30 @@ function spin(holder,finalPair,duration,revealDelay=0){
     resolve(holder);
   };
   let shell = null;
-  const finale = mode === 'suspense' ? chooseFinale(finalPair) : 'none';
+  const selected = mode === 'suspense' ? chooseFinale(finalPair) : 'none';
+  const finale = selected === 'greenTease' && availableColors().length === 3 ? 'none' : selected;
   const finish = () => runFinale(finale, {
     frame: angle => { holder.style.transform = 'rotate(' + angle + 'deg)'; },
     tease: () => paintCapsule(svg, teasePair(finalPair)),
+    fly: async delay => {
+      const svg = holder.querySelector('svg');
+      const travel = innerWidth + holder.getBoundingClientRect().width;
+      const arc = Math.min(innerHeight * .25, 180);
+      const transform = (x,y,angle) => 'translate('+x+'px,'+y+'px) rotate('+angle+'deg)';
+      const flight = svg.animate([
+        {transform:transform(0,0,0)}, {offset:.35,transform:transform(18,-8,35)},
+        {transform:transform(travel,-arc,110)}
+      ],{duration:1200,easing:'ease-in',fill:'forwards'});
+      await flight.finished;
+      paintCapsule(svg,finalPair);
+      await new Promise(done => setTimeout(done,delay));
+      const returning = svg.animate([
+        {transform:transform(travel,-arc,110)}, {offset:.67,transform:transform(-32,-arc/2,315)},
+        {transform:transform(0,0,360)}
+      ],{duration:1000,easing:'ease-out',fill:'forwards'});
+      await returning.finished;
+      flight.cancel(); returning.cancel();
+    },
     openShell: () => {
       shell = holder.cloneNode(true);
       shell.removeAttribute('id');
@@ -252,7 +374,7 @@ function spin(holder,finalPair,duration,revealDelay=0){
     swapPreview: swapped => paintCapsule(svg, swapped ? [finalPair[1], finalPair[0]] : finalPair),
     revealFinal: () => paintCapsule(svg, finalPair),
     frame: angle => { holder.style.transform = 'rotate(' + angle + 'deg)'; },
-    cycle: () => paintCapsule(svg, spinningPair()),
+    cycle: () => paintCapsule(svg, rollPair()),
     woosh: () => audio.play('woosh'),
     rotationWoosh: duration => audio.play('woosh', duration),
     throwAgain: () => audio.play('thrown'),

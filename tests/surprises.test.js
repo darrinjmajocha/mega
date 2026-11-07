@@ -13,7 +13,7 @@ test('rare finale boundaries and green tease never mutate final outcomes',()=>{
   const pair=['red','blue'];
   assert.equal(chooseFinale(pair,()=>.0029),'greenTease');
   assert.equal(chooseFinale(pair,()=>.003),'nested');
-  assert.equal(chooseFinale(pair,()=>.023),'none');
+  assert.equal(chooseFinale(pair,()=>.023),'flight');
   assert.equal(chooseFinale(['green','green'],()=>0),'none');
   assert.deepEqual(teasePair(pair,()=>0),['green','green']);
   assert.deepEqual(pair,['red','blue']);
@@ -35,4 +35,3 @@ test('green tease defers landing until its last instant',()=>{
   tick(649);assert.deepEqual(events,['tease']);
   tick(650);assert.deepEqual(events,['tease','land']);
 });
-

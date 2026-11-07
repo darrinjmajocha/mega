@@ -82,6 +82,17 @@ dialog{background:var(--page-background);color:inherit;border:2px solid;border-r
 dialog::backdrop{background:#0008}
 .samples{margin:20px}.samples svg{width:40px;margin:0 auto 8px}
 #players{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:560px;width:100%}
+#local-options{position:absolute;top:18px;right:16px;z-index:3;font-weight:bold}
+#local-options select,#limit{font:inherit;padding:6px;border-radius:6px}
+#limit{width:5em}
+#call-rules{max-width:32rem;margin:12px auto;font-size:.95rem}#call-rules summary{cursor:pointer}
+#limit-setting{display:block;margin:12px}
+#round-status{margin:0;text-align:center}
+.guess-half,.guess-half:hover:enabled,.guess-half:active:enabled{position:absolute;left:0;width:100%;height:50%;background:transparent;border:0;border-radius:0;padding:0;transform:none}
+.guess-half.top{top:0}.guess-half.bottom{bottom:0}
+.guess-half:focus-visible{outline-offset:0}
+@media(max-width:1059px){#local-options{position:relative;display:block;top:auto;right:auto;text-align:right;margin:6px 14px}}
+body{overflow-x:clip}
 #players article{font-weight:bold;font-size:20px}
 .player-stage{position:relative;display:grid;place-items:center;min-height:clamp(95px,19vh,180px)}
 .player-mega,.player-stage .matryoshka-shell{width:clamp(42px,8vh,78px)}
