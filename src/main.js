@@ -1,4 +1,4 @@
-import { roundPoints, winners, earlierClaims } from './call-it.js?v=claims35';
+import { roundPoints, sidePoints, winners, earlierClaims } from './call-it.js?v=round-feedback36';
 import { collection } from './gacha.js?v=matching-tint32';
 import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=call-it33';
 import { randomPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
@@ -154,6 +154,7 @@ function startGuesses() {
     .sort((a,b) => a.score-b.score || a.tie-b.tie).map(entry => entry.seat);
   claimNumber = 0;
   for (const seat of seats) {
+    seat.mega.querySelectorAll('.side-points').forEach(badge => badge.remove());
     seat.claim = Infinity;
     seat.guess = [null,null];
     seat.label.textContent = seat.name;
@@ -168,6 +169,22 @@ function copyWarning(seat) {
   const names = earlier.map(i => seats[i].name).join(' or ');
   return ' If '+names+' hits this call and '+seat.name+' misses, '+seat.name+' gets −1 instead of the bonus.';
 }
+function playerName(seat) {
+  const name = document.createElement('span');
+  name.className = 'caller-name';
+  name.dataset.player = seat.name;
+  name.textContent = seat.name;
+  return name;
+}
+function standingsMessage() {
+  const scores = seats.map(seat => Number(seat.score.value));
+  const high = Math.max(...scores);
+  const leaders = seats.filter((_,i) => scores[i] === high).map(seat => seat.name);
+  const names = new Intl.ListFormat('en', {type:'conjunction'}).format(leaders);
+  let message = 'Round complete! '+names+(leaders.length === 1 ? ' is in the lead!' : ' are tied for the lead!');
+  if (high >= target || (high === target-1 && leaders.length > 1)) message += ' Play continues until someone leads by 2.';
+  return message;
+}
 function updateRound(edited) {
   if (screen !== 'local' || !callIt()) return;
   const active = !settings.busy && !victory.length;
@@ -180,16 +197,20 @@ function updateRound(edited) {
   else if (settings.busy) status.textContent = 'Rolling…';
   else if (picking) {
     const seat = queue[0];
-    $('#caller').textContent = seat.name+' · '+seat.guess.map(c => c || '?').join(' / ');
+    $('#caller').replaceChildren(playerName(seat),' · '+seat.guess.map(c => c || '?').join(' / '));
     paintCapsule(selector.querySelector('svg'),seat.guess.map((c,i) => c || seat.last[i]));
     $('#lock-guess').disabled = !seat.guess.every(Boolean);
-    status.textContent = seat.name+', tap each half to choose your call.'+copyWarning(seat);
+    status.replaceChildren(playerName(seat),', tap each half to choose your call.'+copyWarning(seat));
   } else if (phase === 'review') {
     status.textContent = 'Calls locked. Tap a player’s mega to edit, or Toss All.'+(edited ? copyWarning(edited) : '');
-  } else status.textContent = 'Round complete.';
+  } else status.textContent = standingsMessage();
   button.hidden = phase !== 'review' || !!victory.length;
   button.disabled = !active || phase !== 'review';
-  for (const seat of seats) for (const hit of seat.buttons) hit.hidden = !active || phase !== 'review';
+  for (const seat of seats) {
+    seat.mega.classList.toggle('calling', active && picking && seat === queue[0]);
+    seat.mega.classList.toggle('waiting', active && picking && seat !== queue[0] && queue.includes(seat));
+    for (const hit of seat.buttons) hit.hidden = !active || phase !== 'review';
+  }
 }
 function checkScoreWinner() {
   victory = winners(seats.map(seat => Number(seat.score.value)),target);
@@ -272,6 +293,7 @@ function setupPlayers(n){
   players=[];$('#players').replaceChildren();$('#scores').innerHTML='<h2>Scoreboard</h2>';
   for(let i=0;i<n;i++){
     const name='P'+(i+1), card=document.createElement('article'), stage=document.createElement('div'), mega=document.createElement('div');
+    card.dataset.player = name;
     stage.className='player-stage';mega.className='player-mega';mega.append(icon(['red','blue']));stage.append(mega);const label=document.createElement('span');label.className='player-label';label.textContent=name;card.append(stage,label);$('#players').append(card);
     const row=document.createElement('div'),score=document.createElement('output');score.value='0';row.append(name);$('#scores').append(row);
     const seat = {name, mega, label, score, guess:[null,null], last:['red','blue'], buttons:[]};
@@ -360,9 +382,17 @@ button.addEventListener('click',async event=>{
         phase = 'between';
         seats.forEach((seat,i) => {
           seat.score.value = Number(seat.score.value) + points[i];
+          rolls[i].forEach((color,side) => {
+            const earned = sidePoints(seat.guess[side],color);
+            if (!earned) return;
+            const badge = document.createElement('span');
+            badge.className = 'side-points '+(side === 0 ? 'top' : 'bottom');
+            badge.textContent = '+'+earned;
+            seat.mega.append(badge);
+          });
           seat.last = rolls[i];
           seat.guess = [null,null];
-          seat.label.textContent = seat.name+' · +'+points[i];
+          seat.label.textContent = seat.name+' · '+(points[i] >= 0 ? '+' : '')+points[i];
           seat.buttons.forEach((hit,side) => hit.setAttribute('aria-label',seat.name+' '+['top','bottom'][side]+' guess'));
         });
         victory = winners(seats.map(seat => Number(seat.score.value)),target,rolls);
