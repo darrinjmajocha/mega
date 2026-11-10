@@ -1,4 +1,4 @@
-import { roundPoints, sidePoints, winners, earlierClaims } from './call-it.js?v=round-feedback36';
+import { roundBreakdown, winners, earlierClaims } from './call-it.js?v=match-badges37';
 import { collection } from './gacha.js?v=matching-tint32';
 import { shortcutPair, chooseFinale, teasePair, runFinale } from './surprises.js?v=call-it33';
 import { randomPair, landingEffect, COLORS, darken } from './colors.js?v=rain-16';
@@ -154,7 +154,7 @@ function startGuesses() {
     .sort((a,b) => a.score-b.score || a.tie-b.tie).map(entry => entry.seat);
   claimNumber = 0;
   for (const seat of seats) {
-    seat.mega.querySelectorAll('.side-points').forEach(badge => badge.remove());
+    seat.mega.querySelectorAll('.side-points, .match-points').forEach(badge => badge.remove());
     seat.claim = Infinity;
     seat.guess = [null,null];
     seat.label.textContent = seat.name;
@@ -378,21 +378,34 @@ button.addEventListener('click',async event=>{
         if(playerGreens)burst(player);
       }));
       if (callIt()) {
-        const points = roundPoints(seats.map(seat => seat.guess),rolls,seats.map(seat => seat.claim));
+        const results = roundBreakdown(seats.map(seat => seat.guess),rolls,seats.map(seat => seat.claim));
         phase = 'between';
         seats.forEach((seat,i) => {
-          seat.score.value = Number(seat.score.value) + points[i];
-          rolls[i].forEach((color,side) => {
-            const earned = sidePoints(seat.guess[side],color);
+          const {sides, matches, total} = results[i];
+          seat.score.value = Number(seat.score.value) + total;
+          sides.forEach((earned,side) => {
             if (!earned) return;
             const badge = document.createElement('span');
             badge.className = 'side-points '+(side === 0 ? 'top' : 'bottom');
             badge.textContent = '+'+earned;
             seat.mega.append(badge);
           });
+          if (matches.length) {
+            const row = document.createElement('span');
+            row.className = 'match-points';
+            for (const {opponent, value} of matches) {
+              const badge = document.createElement('span');
+              badge.dataset.player = seats[opponent].name;
+              badge.textContent = value === 1 ? '+1' : '−1';
+              badge.title = seats[opponent].name + (value === 1 ? ' · Matching roll' : ' · Copy penalty');
+              badge.setAttribute('aria-label', badge.title + ' ' + badge.textContent);
+              row.append(badge);
+            }
+            seat.mega.append(row);
+          }
           seat.last = rolls[i];
           seat.guess = [null,null];
-          seat.label.textContent = seat.name+' · '+(points[i] >= 0 ? '+' : '')+points[i];
+          seat.label.textContent = seat.name+' · '+(total >= 0 ? '+' : '')+total;
           seat.buttons.forEach((hit,side) => hit.setAttribute('aria-label',seat.name+' '+['top','bottom'][side]+' guess'));
         });
         victory = winners(seats.map(seat => Number(seat.score.value)),target,rolls);

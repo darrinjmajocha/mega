@@ -136,6 +136,10 @@ main{min-height:70svh;text-align:center}#menu footer{position:static;margin-top:
 @keyframes caller-pulse{0%,100%{opacity:.5}50%{opacity:1}}
 .side-points{position:absolute;left:50%;top:25%;transform:translate(-50%,-50%);color:white;background:#171717df;border-radius:1em;padding:.15em .35em;font:bold clamp(13px,2vh,19px)/1 Arial;pointer-events:none}
 .side-points.bottom{top:75%}
+.match-points{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;gap:2px;width:max-content}
+.match-points span{color:var(--player-ink);background:#fff;border:1px solid #222;border-radius:1em;padding:2px 3px;font:900 clamp(12px,1.7vh,16px)/1 Arial;paint-order:stroke fill;-webkit-text-stroke:1px #222}
+.reduced-motion .match-points{transform:translate(-50%,-50%) rotate(90deg)}
+.reduced-motion .player-mega:has(.match-points) .side-points{left:20%}
 .reduced-motion .side-points{transform:translate(-50%,-50%) rotate(90deg)}
 .player-label{color:var(--player-ink);font-size:1.4em;font-weight:900;paint-order:stroke fill;-webkit-text-stroke:2px #252525}
 .dark .player-label{-webkit-text-stroke:1px #eee}

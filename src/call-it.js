@@ -9,15 +9,29 @@ export function sidePoints(guess, color) {
   return Number(guess === color);
 }
 
-export function roundPoints(guesses, rolls, claims = []) {
+export function roundBreakdown(guesses, rolls, claims = []) {
   return guesses.map((guess, player) => {
     const roll = rolls[player];
-    let points = roll.reduce((sum, color, side) => sum + sidePoints(guess[side], color), 0);
-    const copiedHit = !samePair(roll, guess) && earlierClaims(guesses, claims, player).some(i => samePair(rolls[i], guess));
-    if (copiedHit) points--;
-    else if (rolls.some((other, i) => i !== player && samePair(other, guess))) points++;
-    return points;
+    const sides = roll.map((color, side) => sidePoints(guess[side], color));
+    const prior = samePair(roll, guess) ? [] : earlierClaims(guesses, claims, player);
+    const matches = [];
+    let penalized = false;
+    rolls.forEach((other, opponent) => {
+      if (opponent === player || !samePair(other, guess)) return;
+      if (prior.includes(opponent)) {
+        if (!penalized) matches.push({opponent, value:-1});
+        penalized = true;
+      } else {
+        matches.push({opponent, value:1});
+      }
+    });
+    const total = matches.reduce((sum, match) => sum + match.value, sides[0] + sides[1]);
+    return {sides, matches, total};
   });
+}
+
+export function roundPoints(guesses, rolls, claims = []) {
+  return roundBreakdown(guesses, rolls, claims).map(result => result.total);
 }
 
 export function winners(scores, limit, rolls = []) {

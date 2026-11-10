@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { roundPoints, winners } from '../src/call-it.js';
 
-test('Call It scores ordered halves and one bonus for any matching opponent', () => {
+test('Call It scores ordered halves and one bonus per matching opponent', () => {
   const guess = ['red','yellow'];
-  assert.deepEqual(roundPoints([guess,guess,guess],[['red','blue'],guess,guess]), [2,3,3]);
+  assert.deepEqual(roundPoints([guess,guess,guess],[['red','blue'],guess,guess]), [3,3,3]);
   assert.deepEqual(roundPoints([guess,guess],[['blue','blue'],['yellow','red']]), [0,0]);
 });
 test('a green pays three or nine on its own side', () => {
@@ -23,7 +23,7 @@ test('only the later claimant loses the cross-player bonus when an earlier claim
   const guesses = [pair,pair,pair];
   const claims = [2,1,3];
   assert.deepEqual(roundPoints(guesses,[['red','red'],pair,['blue','red']],claims),[-1,2,0]);
-  assert.deepEqual(roundPoints(guesses,[pair,pair,pair],claims),[3,3,3]);
+  assert.deepEqual(roundPoints(guesses,[pair,pair,pair],claims),[4,4,4]);
   assert.deepEqual(roundPoints(guesses,[pair,pair,['red','red']],claims),[3,3,-1]);
   assert.deepEqual(roundPoints(guesses,[['red','red'],pair,['red','red']],[1,3,2]),[1,2,1]);
 });
